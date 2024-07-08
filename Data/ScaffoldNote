@@ -1,0 +1,1 @@
+Scaffold-DbContext "Server=(localdb)\MSSQLLocalDB;Database=test2;Trusted_Connection=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -DataAnnotations -ContextDir -Context "DbContext" -Tables Manager, User, Priority, Task, SharedTask -Force
