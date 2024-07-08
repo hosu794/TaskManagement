@@ -1,10 +1,12 @@
-﻿using Data.Models;
+﻿using Core.Models.Auth;
+using Data.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Task = Data.Models.Task;
 
 namespace Data;
 
-public partial class TaskManagerDbContext : DbContext
+public partial class TaskManagerDbContext : IdentityDbContext<ApplicationUser>
 {
     public TaskManagerDbContext()
     {

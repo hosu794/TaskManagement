@@ -5,6 +5,7 @@
         public LoggingSettings Logging { get; set; }
         public string AllowedHosts { get; set; }
         public DatabaseSettings Database { get; set; }
+        public JwtSettings JwtSettings { get; set; }
     }
 
     public class LoggingSettings
@@ -21,5 +22,10 @@
     public class DatabaseSettings
     {
         public string ConnectionString { get; set; }
+    }
+
+    public class JwtSettings
+    {
+        public string SecretKey { get; set; }
     }
 }
