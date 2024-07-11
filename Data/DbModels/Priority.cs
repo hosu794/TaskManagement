@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Data.Models;
+namespace Data.DbModels;
 
 [Table("Priority")]
 public partial class Priority
@@ -19,5 +19,5 @@ public partial class Priority
     public string Name { get; set; } = null!;
 
     [InverseProperty("Priority")]
-    public virtual ICollection<Task> Tasks { get; set; } = new List<Task>();
+    public virtual ICollection<TaskTodo> TaskTodos { get; set; } = new List<TaskTodo>();
 }

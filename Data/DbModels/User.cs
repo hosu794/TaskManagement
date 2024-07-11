@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace Data.Models;
+namespace Data.DbModels;
 
 [Table("User")]
 public partial class User
@@ -27,5 +28,5 @@ public partial class User
     public virtual ICollection<Manager> Managers { get; set; } = new List<Manager>();
 
     [InverseProperty("User")]
-    public virtual ICollection<Task> Tasks { get; set; } = new List<Task>();
+    public virtual ICollection<TaskTodo> TaskTodos { get; set; } = new List<TaskTodo>();
 }

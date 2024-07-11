@@ -1,4 +1,5 @@
 ﻿using Core.Interfaces.Auth;
+using Data.DbModels;
 using Data.Models;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.Extensions.Configuration;

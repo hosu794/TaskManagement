@@ -4,7 +4,7 @@
     {
         public LoggingSettings Logging { get; set; }
         public string AllowedHosts { get; set; }
-        public DatabaseSettings Database { get; set; }
+        public DatabaseSettings DatabaseSettings { get; set; }
         public JwtSettings JwtSettings { get; set; }
     }
 

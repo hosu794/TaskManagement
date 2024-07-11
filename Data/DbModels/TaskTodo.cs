@@ -4,10 +4,10 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Data.Models;
+namespace Data.DbModels;
 
-[Table("Task")]
-public partial class Task
+[Table("TaskTodo")]
+public partial class TaskTodo
 {
     [Key]
     [Column("id")]
@@ -37,10 +37,10 @@ public partial class Task
     public int StatusId { get; set; }
 
     [ForeignKey("PriorityId")]
-    [InverseProperty("Tasks")]
+    [InverseProperty("TaskTodos")]
     public virtual Priority Priority { get; set; } = null!;
 
     [ForeignKey("UserId")]
-    [InverseProperty("Tasks")]
+    [InverseProperty("TaskTodos")]
     public virtual User User { get; set; } = null!;
 }

@@ -2,6 +2,7 @@
 using Core.Interfaces.Auth;
 using Core.Models.Auth;
 using Data;
+using Data.DbModels;
 using Data.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -19,12 +20,8 @@ namespace API
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
 
-            services.AddDbContext<TaskManagerDbContext>(options => options.UseSqlServer(settings?.Database.ConnectionString));
+            services.AddDbContext<TaskManagerDbContext>(options => options.UseSqlServer(settings?.DatabaseSettings.ConnectionString));
             services.AddScoped<ITokenService, TokenService>();
-
-            services.AddIdentity<ApplicationUser, IdentityRole>()
-                    .AddEntityFrameworkStores<TaskManagerDbContext>()
-                    .AddDefaultTokenProviders();
 
             var jwtSettings = settings.JwtSettings;
             var key = Encoding.ASCII.GetBytes(jwtSettings.SecretKey);
