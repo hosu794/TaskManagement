@@ -1,4 +1,5 @@
 using API;
+using Core.Extensions;
 using Data.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +17,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<ManagerAuthorizationMiddleware>();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();

@@ -2,33 +2,57 @@
 using Core.Models.Auth;
 using Data.DbModels;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Core.Implementations.Auth
 {
     public class AuthService : IAuthService
     {
         private readonly ITokenService _tokenService;
+        private readonly IAuthRepository _authRepository;
+        private readonly IPasswordHasher<User> _passwordHasher;
 
-        public AuthService(ITokenService tokenService) {
-        
-           
+        public AuthService(ITokenService tokenService, IAuthRepository authRepository, IPasswordHasher<User> passwordHasher)
+        {
+
+            _authRepository = authRepository;
             _tokenService = tokenService;
+            _passwordHasher = passwordHasher;
         }
 
-        public async Task<string> Login(LoginRequestDto loginRequestDto)
+        public async Task<TokenResponse> Login(LoginRequestDto loginRequestDto)
         {
-            throw new NotImplementedException();
+            var userResult = await _authRepository.GetUser(loginRequestDto);
+
+            if (userResult == null) throw new Exception("User with given login not exists!");
+
+            var result = _passwordHasher.VerifyHashedPassword(null, userResult.Password, loginRequestDto.Password);
+
+            if (result == PasswordVerificationResult.Failed) throw new Exception("Incorrect password");
+
+            var token = _tokenService.GenerateToken(userResult);
+
+            return new TokenResponse()
+            {
+                IsManager = userResult.IsManager,
+                Token = token
+            };
         }
 
-        public async Task<bool> RegisterUser(RegisterRequestDto registerRequestDto)
+        public async Task<TokenResponse> RegisterUser(RegisterRequestDto registerRequestDto)
         {
-            throw new NotImplementedException();
+
+            registerRequestDto.Password = _passwordHasher.HashPassword(null, registerRequestDto.Password);
+
+            var registerResponse = await _authRepository.CreateUser(registerRequestDto);
+
+            var token = _tokenService.GenerateToken(registerResponse);
+
+            return new TokenResponse()
+            {
+                IsManager = registerResponse.IsManager,
+                Token = token
+            };
+
         }
     }
 }

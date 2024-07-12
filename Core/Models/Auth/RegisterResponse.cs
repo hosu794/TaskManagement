@@ -1,6 +1,6 @@
 ﻿namespace Core.Models.Auth
 {
-    public class UserResponseDto
+    public class RegisterResponse
     {
         public int Id { get; set; }
         public string Username { get; set; }

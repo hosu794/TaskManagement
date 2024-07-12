@@ -1,4 +1,5 @@
 ﻿using Core.Interfaces.Auth;
+using Core.Models.Auth;
 using Data.DbModels;
 using Data.Models;
 using Microsoft.AspNetCore.Identity.Data;
@@ -19,29 +20,25 @@ namespace Core.Implementations.Auth
             _configuration = configuration;
         }
 
-        public string GenerateToken(User user, IList<string> roles) {
-
+        public string GenerateToken(UserRepositoryResponse user)
+        {
             var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_configuration["JwtSettings:SecretKey"]));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, user.Username),
+                new Claim(ClaimTypes.Name, user.UserName),
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim("IsManager", user.IsManager.ToString())
             };
 
-            foreach (var role in roles)
-            {
-                claims.Add(new Claim(ClaimTypes.Role, role));
-            }
-
             var token = new JwtSecurityToken(
-            _configuration["JwtSettings:Issuer"],
-            _configuration["JwtSettings:Audience"],
-            claims,
-            expires: DateTime.UtcNow.AddMinutes(Convert.ToDouble(_configuration["JwtSettings:DurationInMinutes"])),
-            signingCredentials: credentials
-       );
+                issuer: _configuration["JwtSettings:Issuer"],
+                audience: _configuration["JwtSettings:Audience"],
+                claims: claims,
+                expires: DateTime.UtcNow.AddMinutes(Convert.ToDouble(_configuration["JwtSettings:DurationInMinutes"])),
+                signingCredentials: credentials
+            );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
