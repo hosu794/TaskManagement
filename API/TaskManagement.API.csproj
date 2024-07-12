@@ -13,8 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Core\Core.csproj" />
-    <ProjectReference Include="..\Data\Data.csproj" />
+    <ProjectReference Include="..\Core\TaskManagement.Core.csproj" />
+    <ProjectReference Include="..\Data\TaskManagement.Data.csproj" />
   </ItemGroup>
 
 </Project>

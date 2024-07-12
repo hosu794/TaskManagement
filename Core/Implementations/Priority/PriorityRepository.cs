@@ -22,5 +22,10 @@ namespace Core.Implementations.Priority
                 Name = x.Name,
             }).ToListAsync();
         }
+
+        public async Task<bool> IsPriorityExistsById(int priorityId)
+        {
+            return await _context.Priorities.AnyAsync(x => x.Id == priorityId);
+        }
     }
 }

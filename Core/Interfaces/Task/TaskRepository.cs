@@ -15,7 +15,7 @@ namespace Core.Interfaces.Task
             _context = context;
         }
 
-        public async Task<TaskTodo> CreateTask(TaskRepositoryDto task)
+        public async Task<TaskResponse> CreateTask(TaskRepositoryDto task)
         {
             var newTask = new TaskTodo()
             {
@@ -28,7 +28,15 @@ namespace Core.Interfaces.Task
             await _context.AddRangeAsync(newTask);
             await _context.SaveChangesAsync();
 
-            return newTask;
+            return new TaskResponse()
+            {
+                Id = newTask.Id,
+                CreatedAt = newTask.CreatedAt,
+                CreatedBy = newTask.UserId,
+                Name = string.Empty,
+                Description = newTask.Description,
+                UpdatedAt = newTask.UpdatedAt
+            };
         }
 
         public async Task<bool> DeleteTask(int taskId)
@@ -40,6 +48,59 @@ namespace Core.Interfaces.Task
             _context.Remove(taskToRemove);
 
             return true;
+        }
+
+        public Task<List<TaskResponse>> GetTaskByUserId(int userId)
+        {
+            return _context.TaskTodos.AsNoTracking()
+                .Where(x => x.UserId == userId)
+                .Select(x => new TaskResponse()
+                {
+                    CreatedAt = x.CreatedAt,
+                    CreatedBy = x.UserId,
+                    Description = x.Description,
+                    Id = x.Id,
+                    Name = string.Empty,
+                    UpdatedAt = x.UpdatedAt 
+                }).ToListAsync();
+        }
+
+        public async Task<List<TaskResponse>> GetTaskSharedByUser(int userId)
+        {
+            return await _context.TaskTodos
+        }
+
+        public Task<List<TaskResponse>> GetTaskSharedForUser(int userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<TaskResponse> UpdateTask(TaskRepositoryDto task, int taskId)
+        {
+            var taskToUpdate = await _context.TaskTodos.FirstOrDefaultAsync(x => x.Id == taskId);
+
+            if (taskToUpdate == null) throw new Exception($"Task not found with given id: {taskId}");
+
+            taskToUpdate.PriorityId = task.PriorityId;
+            taskToUpdate.Description = task.Description;
+            taskToUpdate.UpdatedAt = DateTime.Now;
+
+            _context.Entry(taskToUpdate).Property(p => p.PriorityId).IsModified = true;
+            _context.Entry(taskToUpdate).Property(p => p.Description).IsModified = true;
+            _context.Entry(taskToUpdate).Property(p => p.UpdatedAt).IsModified = true;
+
+            await _context.SaveChangesAsync();
+
+            return new TaskResponse()
+            {
+                Id = taskToUpdate.Id,
+                CreatedAt = taskToUpdate.CreatedAt,
+                CreatedBy = taskToUpdate.UserId,
+                Name = string.Empty,
+                Description = taskToUpdate.Description,
+                UpdatedAt = taskToUpdate.UpdatedAt
+            };
+
         }
 
         
