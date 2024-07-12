@@ -1,5 +1,5 @@
 ﻿using Core.Models.Auth;
-using Data.DbModels;
+using TaskManagement.Core.Models.User;
 
 namespace Core.Interfaces.Auth
 {
@@ -8,5 +8,6 @@ namespace Core.Interfaces.Auth
         Task<UserRepositoryResponse?> CreateUser(RegisterRequestDto request);
         Task<UserRepositoryResponse?> GetUser(LoginRequestDto request);
         Task<bool> IsUserExistsById(int userId);
+        Task<UserResponse> GetUser(int userId);
     }
 }

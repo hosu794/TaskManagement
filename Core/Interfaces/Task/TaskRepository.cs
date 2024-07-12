@@ -1,8 +1,9 @@
 ﻿using Core.Implementations.Task;
 using Core.Models.Task;
-using Data;
-using Data.DbModels;
+
 using Microsoft.EntityFrameworkCore;
+using TaskManagement.Data;
+using TaskManagement.Data.DbModels;
 
 namespace Core.Interfaces.Task
 {
@@ -21,8 +22,10 @@ namespace Core.Interfaces.Task
             {
                 CreatedAt = DateTime.Now,
                 Description = task.Description,
+                Title = task.Name,
                 PriorityId = task.PriorityId,
                 UserId = task.UserId,
+                UpdatedAt = DateTime.Now
             };
 
             await _context.AddRangeAsync(newTask);
@@ -67,12 +70,35 @@ namespace Core.Interfaces.Task
 
         public async Task<List<TaskResponse>> GetTaskSharedByUser(int userId)
         {
-            return await _context.TaskTodos
+            return await _context.TaskTodos.AsNoTracking()
+                .Include(x => x.Users)
+                .Where(x => x.Users.Count > 0 && x.UserId == userId)
+                .Select(x => new TaskResponse()
+                {
+                    Id = x.Id,
+                    CreatedAt = x.CreatedAt,
+                    CreatedBy = x.UserId,
+                    Name = x.Title,
+                    Description = x.Description,
+                    UpdatedAt = x.UpdatedAt
+                }).ToListAsync();
         }
 
-        public Task<List<TaskResponse>> GetTaskSharedForUser(int userId)
+        public async Task<List<TaskResponse>> GetTaskSharedForUser(int userId)
         {
-            throw new NotImplementedException();
+            return await _context.Users.AsNoTracking()
+               .Include(x => x.SharedTasks)
+               .Where(x => x.SharedTasks.Count > 0 && x.Id == userId)
+               .SelectMany(x => x.SharedTasks)
+               .Select(x => new TaskResponse()
+               {
+                   Id = x.Id,
+                   CreatedAt = x.CreatedAt,
+                   CreatedBy = x.UserId,
+                   Name = x.Title,
+                   Description = x.Description,
+                   UpdatedAt = x.UpdatedAt
+               }).ToListAsync();
         }
 
         public async Task<TaskResponse> UpdateTask(TaskRepositoryDto task, int taskId)

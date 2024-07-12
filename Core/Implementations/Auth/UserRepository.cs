@@ -1,8 +1,9 @@
 ﻿using Core.Interfaces.Auth;
 using Core.Models.Auth;
-using Data;
-using Data.DbModels;
 using Microsoft.EntityFrameworkCore;
+using TaskManagement.Core.Models.User;
+using TaskManagement.Data;
+using TaskManagement.Data.DbModels;
 
 namespace Core.Services.Auth
 {
@@ -75,6 +76,31 @@ namespace Core.Services.Auth
         public async Task<bool> IsUserExistsById(int userId)
         {
             return await _context.Users.AnyAsync(x => x.Id == userId);
+        }
+
+        public async Task<UserResponse> GetUser(int userId)
+        {
+            var user = await _context.Users.AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == userId);
+
+            if (user == null) return new UserResponse();
+
+
+            var response = new UserResponse()
+            {
+                Id = user.Id,
+                Username = user.Username,
+            };
+
+
+            var manager = await _context.Managers.AsNoTracking().FirstOrDefaultAsync(x => x.UserId == userId);
+
+            if (manager != null)
+            {
+                response.IsManager = true;
+            }
+
+            return response;
         }
     }
 }

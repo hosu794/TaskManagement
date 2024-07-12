@@ -1,17 +1,18 @@
 ﻿using Core.Interfaces.Auth;
 using Core.Models.Auth;
-using Data.DbModels;
 using Microsoft.AspNetCore.Identity;
+using TaskManagement.Core.Models.User;
+using TaskManagement.Data.DbModels;
 
 namespace Core.Implementations.Auth
 {
-    public class AuthService : IAuthService
+    public class UserService : IUserService
     {
         private readonly ITokenService _tokenService;
         private readonly IUserRepository _authRepository;
         private readonly IPasswordHasher<User> _passwordHasher;
 
-        public AuthService(ITokenService tokenService, IUserRepository authRepository, IPasswordHasher<User> passwordHasher)
+        public UserService(ITokenService tokenService, IUserRepository authRepository, IPasswordHasher<User> passwordHasher)
         {
 
             _authRepository = authRepository;
@@ -53,6 +54,11 @@ namespace Core.Implementations.Auth
                 Token = token
             };
 
+        }
+
+        public async Task<UserResponse> GetUser(int userId)
+        {
+            return await _authRepository.GetUser(userId);
         }
     }
 }

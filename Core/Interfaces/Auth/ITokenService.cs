@@ -1,6 +1,4 @@
 ﻿using Core.Models.Auth;
-using Data.DbModels;
-using Data.Models;
 
 namespace Core.Interfaces.Auth
 {

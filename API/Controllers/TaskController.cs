@@ -1,8 +1,10 @@
 ﻿using Core.Extensions;
+using Core.Implementations.Task;
 using Core.Models.Stats;
 using Core.Models.Task;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Runtime.CompilerServices;
 using System.Security.Claims;
 
 namespace API.Controllers
@@ -11,8 +13,14 @@ namespace API.Controllers
     [Route("api/[controller]")]
     public class TaskController : ControllerBase 
     {
+        private readonly ITaskService _taskService;
 
-        [HttpPost]
+        public TaskController(ITaskService taskService)
+        {
+            _taskService = taskService;
+        }
+
+        [HttpPost("tasks")]
         [Authorize]
         public async Task<IActionResult> CreateTask([FromBody] TaskRequest request)
         {
@@ -20,44 +28,51 @@ namespace API.Controllers
 
             int.TryParse(userId, out int parsedIntUserId);
 
-            return Ok(await Task.FromResult(new { parsedIntUserId }));
+            return Ok(await _taskService.CreateTask(request, parsedIntUserId));
         }
 
-        [HttpPut]
+        [HttpPut("tasks")]
         [Authorize]
-        public async Task<IActionResult> UpdateTask([FromBody] TaskRequest request)
+        public async Task<IActionResult> UpdateTask([FromBody] TaskRequest request, [FromQuery] int taskId)
         {
             var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
             int.TryParse(userId, out int parsedIntUserId);
 
-            throw new NotImplementedException();
+            var result = await _taskService.UpdateTask(request, taskId);
+
+            return Ok(result);
         }
 
-        [HttpDelete]    
+        [HttpDelete("tasks")]
+        [Authorize]
         public async Task<IActionResult> DeleteTask([FromQuery] int taskId)
         {
             throw new NotImplementedException();
         }
 
-        [HttpPost]
+        [HttpPost("shared/task")]
+        [Authorize]
         public async Task<IActionResult> ShareTask([FromQuery] int taskId, [FromQuery] int userId)
         {
             throw new NotImplementedException();
         }
 
-        [HttpDelete]
+        [HttpDelete("shared/tasks")]
+        [Authorize]
         public async Task<IActionResult> DeleteShareTsk([FromQuery] int taskId, [FromQuery] int userId)
         {
             throw new NotImplementedException();
         }
 
-        [HttpGet]
+        [HttpGet("tasks")]
+        [Authorize]
         public async Task<IActionResult> GetAllUserTask()
         {
             throw new NotImplementedException();
         }
 
-        [HttpGet]
+        [HttpGet("shared/tasks")]
+        [Authorize]
         public async Task<IActionResult> GetSharedTasks()
         {
             var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
@@ -67,14 +82,17 @@ namespace API.Controllers
         }
 
 
-        [HttpGet]
+        [HttpGet("tasks/attached")]
+        [Authorize]
         [ManagerOnly]
         public async Task<IActionResult> GetAttachedUsetTasks()
         {
             throw new NotImplementedException();
         }
 
-        [HttpGet]
+        [HttpGet("tasks/manager/stats")]
+        [Authorize]
+        [ManagerOnly]
         public async Task<IActionResult> GetStats([FromBody] StatsRequest request) {  throw new NotImplementedException(); }
 
     }

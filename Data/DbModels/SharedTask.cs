@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
-using Data.DbModels;
-using Microsoft.EntityFrameworkCore;
+using TaskManagement.Data.DbModels;
 
 namespace Data.Models;
 

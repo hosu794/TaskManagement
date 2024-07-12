@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Data.DbModels;
+namespace TaskManagement.Data.DbModels;
 
 [PrimaryKey("Id", "UserId")]
 [Table("Manager")]

@@ -21,7 +21,7 @@ CREATE TABLE SharedTask (
     Task_id int NOT NULL,
     CONSTRAINT SharedTask_pk PRIMARY KEY (userId, Task_id),
     CONSTRAINT SharedTask_User FOREIGN KEY (userId) REFERENCES [User] (id),
-    CONSTRAINT SharedTask_Task FOREIGN KEY (Task_id) REFERENCES Task (id)
+    CONSTRAINT SharedTask_Task FOREIGN KEY (Task_id) REFERENCES TaskTodo (id)
 );
 
 CREATE TABLE [Priority] (

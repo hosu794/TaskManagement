@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace Data.DbModels;
+namespace TaskManagement.Data.DbModels;
 
 [Table("TaskTodo")]
 public partial class TaskTodo
@@ -40,4 +40,8 @@ public partial class TaskTodo
     [ForeignKey("UserId")]
     [InverseProperty("TaskTodos")]
     public virtual User User { get; set; } = null!;
+
+    [ForeignKey("TaskId")]
+    [InverseProperty("SharedTasks")]
+    public virtual ICollection<User> Users { get; set; } = new List<User>();
 }

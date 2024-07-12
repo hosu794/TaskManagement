@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
-namespace Data.DbModels;
+namespace TaskManagement.Data.DbModels;
 
 [Table("User")]
 public partial class User
@@ -29,4 +26,8 @@ public partial class User
 
     [InverseProperty("User")]
     public virtual ICollection<TaskTodo> TaskTodos { get; set; } = new List<TaskTodo>();
+
+    [ForeignKey("UserId")]
+    [InverseProperty("Users")]
+    public virtual ICollection<TaskTodo> SharedTasks { get; set; } = new List<TaskTodo>();
 }

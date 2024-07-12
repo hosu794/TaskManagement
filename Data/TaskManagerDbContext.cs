@@ -1,10 +1,9 @@
-﻿using Core.Models.Auth;
-using Data.DbModels;
-using Data.Models;
-using Microsoft.AspNetCore.Identity;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using TaskManagement.Data.DbModels;
 
-namespace Data;
+namespace TaskManagement.Data;
 
 public partial class TaskManagerDbContext : DbContext
 {
@@ -18,7 +17,6 @@ public partial class TaskManagerDbContext : DbContext
     }
 
     public virtual DbSet<Manager> Managers { get; set; }
-
 
     public virtual DbSet<Priority> Priorities { get; set; }
 
@@ -63,6 +61,25 @@ public partial class TaskManagerDbContext : DbContext
         modelBuilder.Entity<User>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("User_pk");
+
+            entity.HasMany(d => d.SharedTasks).WithMany(p => p.Users)
+                .UsingEntity<Dictionary<string, object>>(
+                    "SharedTask",
+                    r => r.HasOne<TaskTodo>().WithMany()
+                    .HasForeignKey("TaskId")
+                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .HasConstraintName("SharedTask_Task"),
+                    l => l.HasOne<User>().WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .HasConstraintName("SharedTask_User"),
+                    j =>
+                    {
+                        j.HasKey("UserId", "TaskId").HasName("SharedTask_pk");
+                        j.ToTable("SharedTask");
+                        j.IndexerProperty<int>("UserId").HasColumnName("userId");
+                        j.IndexerProperty<int>("TaskId").HasColumnName("Task_id");
+                    });
         });
 
         OnModelCreatingPartial(modelBuilder);

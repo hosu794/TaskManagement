@@ -1,11 +1,12 @@
 ﻿using Core.Extensions;
 using Core.Implementations.Auth;
 using Core.Implementations.Priority;
+using Core.Implementations.Task;
 using Core.Interfaces.Auth;
 using Core.Interfaces.Priority;
+using Core.Interfaces.Task;
 using Core.Services.Auth;
 using Data;
-using Data.DbModels;
 using Data.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -14,6 +15,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using TaskManagement.Data;
+using TaskManagement.Data.DbModels;
 
 namespace API
 {
@@ -27,12 +30,14 @@ namespace API
 
             services.AddDbContext<TaskManagerDbContext>(options => options.UseSqlServer(settings?.DatabaseSettings.ConnectionString));
             services.AddScoped<ITokenService, TokenService>();
-            services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IUserService, UserService>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
             services.AddTransient<IClaimsTransformation, CustomClaimsTransformation>();
             services.AddScoped<IPriorityRepository, PriorityRepository>();
             services.AddScoped<IPriorityService, PriorityService>();
+            services.AddScoped<ITaskRepository, TaskRepository>();
+            services.AddScoped<ITaskService, TaskService>();
 
             var jwtSettings = settings.JwtSettings;
             var key = Encoding.ASCII.GetBytes(jwtSettings.SecretKey);

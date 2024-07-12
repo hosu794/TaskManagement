@@ -3,25 +3,26 @@ using Core.Interfaces.Auth;
 using Core.Models.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AuthController : ControllerBase
+    public class UserController : ControllerBase
     {
-        private readonly IAuthService _authService;
+        private readonly IUserService _userService;
 
-        public AuthController(IAuthService authService)
+        public UserController(IUserService authService)
         {
-            _authService = authService;
+            _userService = authService;
         }
 
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterRequestDto request)
         {
 
-            var response = await _authService.RegisterUser(request);
+            var response = await _userService.RegisterUser(request);
 
             if (response == null) return BadRequest();
 
@@ -31,7 +32,7 @@ namespace API.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequestDto request)
         {
-            var response = await _authService.Login(request);
+            var response = await _userService.Login(request);
 
             if (response == null) return BadRequest();
             return Ok(response);
@@ -45,11 +46,16 @@ namespace API.Controllers
             return Ok("Dane dostępne tylko dla managerów");
         }
 
-        [HttpGet("auth")]
         [Authorize]
-        public IActionResult GetAuth()
+        [HttpGet("current")]
+        public async Task<IActionResult> GetCurrentLoggedUser()
         {
-            return Ok("Dane dostępne tylko dla zautoryzowanych uzytkownikow.");
+
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+
+            int.TryParse(userId, out int parsedIntUserId);
+
+            return Ok(await _userService.GetUser(parsedIntUserId));
         }
 
 
