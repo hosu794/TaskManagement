@@ -1,9 +1,7 @@
 ﻿using Core.Extensions;
 using Core.Interfaces.Auth;
 using Core.Models.Auth;
-using Data.DbModels;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -20,10 +18,11 @@ namespace API.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterRequestDto request) { 
-        
-            var response =  await _authService.RegisterUser(request);
-        
+        public async Task<IActionResult> Register([FromBody] RegisterRequestDto request)
+        {
+
+            var response = await _authService.RegisterUser(request);
+
             if (response == null) return BadRequest();
 
             return Ok(response);
@@ -34,17 +33,15 @@ namespace API.Controllers
         {
             var response = await _authService.Login(request);
 
-            if (response == null) return BadRequest(); 
+            if (response == null) return BadRequest();
             return Ok(response);
         }
-
 
         [Authorize]
         [ManagerOnly]
         [HttpGet("manager")]
-        public IActionResult GetManagerData()
+        public IActionResult GetManagerAuth()
         {
-            // Logika dostępna tylko dla managerów
             return Ok("Dane dostępne tylko dla managerów");
         }
 
@@ -52,7 +49,6 @@ namespace API.Controllers
         [Authorize]
         public IActionResult GetAuth()
         {
-            // Logika dostępna tylko dla managerów
             return Ok("Dane dostępne tylko dla zautoryzowanych uzytkownikow.");
         }
 

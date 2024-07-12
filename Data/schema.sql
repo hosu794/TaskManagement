@@ -1,3 +1,4 @@
+
 CREATE TABLE [User] (
     id int NOT NULL IDENTITY(1,1),
     username varchar(100) NOT NULL,
@@ -13,16 +14,20 @@ CREATE TABLE [Manager] (
     CONSTRAINT Manager_User FOREIGN KEY (userId) REFERENCES [User] (id)
 );
 
+
+
+CREATE TABLE SharedTask (
+    userId int NOT NULL,
+    Task_id int NOT NULL,
+    CONSTRAINT SharedTask_pk PRIMARY KEY (userId, Task_id),
+    CONSTRAINT SharedTask_User FOREIGN KEY (userId) REFERENCES [User] (id),
+    CONSTRAINT SharedTask_Task FOREIGN KEY (Task_id) REFERENCES Task (id)
+);
+
 CREATE TABLE [Priority] (
     id int NOT NULL IDENTITY(1,1),
     name varchar(100) NOT NULL,
     CONSTRAINT Priority_pk PRIMARY KEY (id)
-);
-
-CREATE TABLE Status (
-    id int NOT NULL IDENTITY(1,1),
-    name varchar(100) NOT NULL,
-    CONSTRAINT Status_pk PRIMARY KEY (id)
 );
 
 CREATE TABLE [TaskTodo] (
@@ -33,17 +38,12 @@ CREATE TABLE [TaskTodo] (
     updatedAt datetime NOT NULL,
     userId int NOT NULL,
     priorityId int NOT NULL,
-    statusId int NOT NULL,
     CONSTRAINT Task_pk PRIMARY KEY (id),
     CONSTRAINT Task_User FOREIGN KEY (userId) REFERENCES [User] (id),
     CONSTRAINT Task_Priority FOREIGN KEY (priorityId) REFERENCES Priority (id),
-    CONSTRAINT Task_Status FOREIGN KEY (statusId) REFERENCES Status (id)
 );
 
-CREATE TABLE SharedTask (
-    userId int NOT NULL,
-    Task_id int NOT NULL,
-    CONSTRAINT SharedTask_pk PRIMARY KEY (userId, Task_id),
-    CONSTRAINT SharedTask_User FOREIGN KEY (userId) REFERENCES [User] (id),
-    CONSTRAINT SharedTask_Task FOREIGN KEY (Task_id) REFERENCES Task (id)
-);
+
+INSERT INTO Priority (name) VALUES ('Low');
+INSERT INTO Priority (name) VALUES ('Medium');
+INSERT INTO Priority (name) VALUES ('High');

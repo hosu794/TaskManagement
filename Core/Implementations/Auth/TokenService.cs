@@ -1,8 +1,5 @@
 ﻿using Core.Interfaces.Auth;
 using Core.Models.Auth;
-using Data.DbModels;
-using Data.Models;
-using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;

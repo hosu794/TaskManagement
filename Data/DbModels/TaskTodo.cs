@@ -33,9 +33,6 @@ public partial class TaskTodo
     [Column("priorityId")]
     public int PriorityId { get; set; }
 
-    [Column("statusId")]
-    public int StatusId { get; set; }
-
     [ForeignKey("PriorityId")]
     [InverseProperty("TaskTodos")]
     public virtual Priority Priority { get; set; } = null!;

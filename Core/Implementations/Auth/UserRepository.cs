@@ -6,12 +6,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Core.Services.Auth
 {
-    public class AuthRepository : IAuthRepository
+    public class UserRepository : IUserRepository
     {
         private readonly TaskManagerDbContext _context;
 
 
-        public AuthRepository(TaskManagerDbContext context)
+        public UserRepository(TaskManagerDbContext context)
         {
             _context = context;
         }
@@ -70,6 +70,11 @@ namespace Core.Services.Auth
                 IsManager = request.IsManager
             };
 
+        }
+
+        public async Task<bool> IsUserExistsById(int userId)
+        {
+            return await _context.Users.AnyAsync(x => x.Id == userId);
         }
     }
 }

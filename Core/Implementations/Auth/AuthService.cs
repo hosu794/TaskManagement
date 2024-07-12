@@ -8,10 +8,10 @@ namespace Core.Implementations.Auth
     public class AuthService : IAuthService
     {
         private readonly ITokenService _tokenService;
-        private readonly IAuthRepository _authRepository;
+        private readonly IUserRepository _authRepository;
         private readonly IPasswordHasher<User> _passwordHasher;
 
-        public AuthService(ITokenService tokenService, IAuthRepository authRepository, IPasswordHasher<User> passwordHasher)
+        public AuthService(ITokenService tokenService, IUserRepository authRepository, IPasswordHasher<User> passwordHasher)
         {
 
             _authRepository = authRepository;

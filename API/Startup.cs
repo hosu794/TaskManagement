@@ -1,6 +1,8 @@
 ﻿using Core.Extensions;
 using Core.Implementations.Auth;
+using Core.Implementations.Priority;
 using Core.Interfaces.Auth;
+using Core.Interfaces.Priority;
 using Core.Services.Auth;
 using Data;
 using Data.DbModels;
@@ -26,9 +28,11 @@ namespace API
             services.AddDbContext<TaskManagerDbContext>(options => options.UseSqlServer(settings?.DatabaseSettings.ConnectionString));
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IAuthService, AuthService>();
-            services.AddScoped<IAuthRepository, AuthRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
             services.AddTransient<IClaimsTransformation, CustomClaimsTransformation>();
+            services.AddScoped<IPriorityRepository, PriorityRepository>();
+            services.AddScoped<IPriorityService, PriorityService>();
 
             var jwtSettings = settings.JwtSettings;
             var key = Encoding.ASCII.GetBytes(jwtSettings.SecretKey);
@@ -37,7 +41,6 @@ namespace API
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Your API", Version = "v1" });
 
-                // Dodaj definicję zabezpieczenia
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     Description = "JWT Authorization header using the Bearer scheme. Enter 'Bearer' [space] and then your token in the text input below.",
