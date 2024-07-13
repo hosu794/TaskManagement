@@ -8,5 +8,6 @@ namespace Core.Interfaces.Auth
         Task<TokenResponse> RegisterUser(RegisterRequestDto registerRequestDto);
         Task<TokenResponse>Login (LoginRequestDto loginRequestDto);
         Task<UserResponse> GetUser(int userId);
+        Task<bool> IsExistsByUsername(string username);
     }
 }

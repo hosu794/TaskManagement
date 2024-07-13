@@ -36,17 +36,20 @@ namespace Core.Interfaces.Task
                 Id = newTask.Id,
                 CreatedAt = newTask.CreatedAt,
                 CreatedBy = newTask.UserId,
-                Name = string.Empty,
+                Name = newTask.Title,
                 Description = newTask.Description,
                 UpdatedAt = newTask.UpdatedAt
             };
         }
 
-        public async Task<bool> DeleteTask(int taskId)
+        public async Task<bool> DeleteTask(int taskId, int userId)
         {
+
             var taskToRemove = await _context.TaskTodos.FirstOrDefaultAsync(x => x.Id == taskId);
 
             if (taskToRemove == null) return false;
+
+            if (taskToRemove.UserId != userId) return false;
 
             _context.Remove(taskToRemove);
 
@@ -63,8 +66,9 @@ namespace Core.Interfaces.Task
                     CreatedBy = x.UserId,
                     Description = x.Description,
                     Id = x.Id,
-                    Name = string.Empty,
-                    UpdatedAt = x.UpdatedAt 
+                    Name = x.Title,
+                    UpdatedAt = x.UpdatedAt,
+                    PriorityId = x.PriorityId,
                 }).ToListAsync();
         }
 
@@ -110,10 +114,12 @@ namespace Core.Interfaces.Task
             taskToUpdate.PriorityId = task.PriorityId;
             taskToUpdate.Description = task.Description;
             taskToUpdate.UpdatedAt = DateTime.Now;
+            taskToUpdate.Title = task.Name;
 
             _context.Entry(taskToUpdate).Property(p => p.PriorityId).IsModified = true;
             _context.Entry(taskToUpdate).Property(p => p.Description).IsModified = true;
             _context.Entry(taskToUpdate).Property(p => p.UpdatedAt).IsModified = true;
+            _context.Entry(taskToUpdate).Property(p => p.Title).IsModified = true;
 
             await _context.SaveChangesAsync();
 
@@ -122,7 +128,7 @@ namespace Core.Interfaces.Task
                 Id = taskToUpdate.Id,
                 CreatedAt = taskToUpdate.CreatedAt,
                 CreatedBy = taskToUpdate.UserId,
-                Name = string.Empty,
+                Name = taskToUpdate.Title,
                 Description = taskToUpdate.Description,
                 UpdatedAt = taskToUpdate.UpdatedAt
             };

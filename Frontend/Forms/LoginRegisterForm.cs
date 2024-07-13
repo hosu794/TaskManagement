@@ -46,13 +46,14 @@
                     return;
                 }
                 this.DialogResult = DialogResult.OK;
+                return;
             }
 
             var isRegisterCorrect = await _apiService.Register(tbUsername.Text, tbPassword.Text, cbChangeAuth.Checked);
 
             if (!isRegisterCorrect)
             {
-                MessageBox.Show("Wrong password or login");
+                MessageBox.Show("Username already exists!");
                 return;
             }
             

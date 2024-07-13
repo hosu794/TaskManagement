@@ -4,14 +4,14 @@ using Core.Models.Stats;
 using Core.Models.Task;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Runtime.CompilerServices;
+using Microsoft.OpenApi.Validations;
 using System.Security.Claims;
 
 namespace API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class TaskController : ControllerBase 
+    public class TaskController : ControllerBase
     {
         private readonly ITaskService _taskService;
 
@@ -47,7 +47,10 @@ namespace API.Controllers
         [Authorize]
         public async Task<IActionResult> DeleteTask([FromQuery] int taskId)
         {
-            throw new NotImplementedException();
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            int.TryParse(userId, out int parsedIntUserId);
+
+            return Ok(await _taskService.DeleteTaskById(taskId, parsedIntUserId));
         }
 
         [HttpPost("shared/task")]
@@ -68,7 +71,10 @@ namespace API.Controllers
         [Authorize]
         public async Task<IActionResult> GetAllUserTask()
         {
-            throw new NotImplementedException();
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            int.TryParse(userId, out int parsedIntUserId);
+
+            return Ok(await _taskService.GetTaskByUserId(parsedIntUserId));
         }
 
         [HttpGet("shared/tasks")]
@@ -93,7 +99,7 @@ namespace API.Controllers
         [HttpGet("tasks/manager/stats")]
         [Authorize]
         [ManagerOnly]
-        public async Task<IActionResult> GetStats([FromBody] StatsRequest request) {  throw new NotImplementedException(); }
+        public async Task<IActionResult> GetStats([FromBody] StatsRequest request) { throw new NotImplementedException(); }
 
     }
 }

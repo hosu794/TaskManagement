@@ -35,18 +35,5 @@ jobs:
       uses: docker/build-push-action@v4
       with:
         context: .
-        push: false  # Zmieñ na true, jeœli chcesz pushowaæ do rejestru
+        push: false 
         tags: twoja-aplikacja:latest
-
-    # Opcjonalnie: Deploy
-    # - name: Deploy to server
-    #   uses: appleboy/ssh-action@master
-    #   with:
-    #     host: ${{ secrets.HOST }}
-    #     username: ${{ secrets.USERNAME }}
-    #     key: ${{ secrets.SSH_PRIVATE_KEY }}
-    #     script: |
-    #       docker pull twoja-aplikacja:latest
-    #       docker stop stary-kontener || true
-    #       docker rm stary-kontener || true
-    #       docker run -d --name nowy-kontener twoja-aplikacja:latest

@@ -9,5 +9,6 @@ namespace Core.Interfaces.Auth
         Task<UserRepositoryResponse?> GetUser(LoginRequestDto request);
         Task<bool> IsUserExistsById(int userId);
         Task<UserResponse> GetUser(int userId);
+        Task<bool> IsUserExistsByUsername(string username);
     }
 }

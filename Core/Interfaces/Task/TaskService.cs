@@ -22,9 +22,9 @@ namespace Core.Interfaces.Task
             return await _taskRepository.CreateTask(new TaskRepositoryDto { UserId = userId, Name = request.Name, Description = request.Description, PriorityId = request.PriorityId });   
         }
 
-        public async Task<bool> DeleteTaskById(int taskId)
+        public async Task<bool> DeleteTaskById(int taskId, int userId)
         {
-            return await _taskRepository.DeleteTask(taskId);
+            return await _taskRepository.DeleteTask(taskId, userId);
         }
 
         public Task<List<TaskResponse>> GetSharedTaskByUserId(string userId)
@@ -37,9 +37,14 @@ namespace Core.Interfaces.Task
             return await _taskRepository.GetTaskByUserId(userId);
         }
 
-        public Task<TaskResponse> UpdateTask(TaskRequest request, int taskId)
+        public async Task<TaskResponse> UpdateTask(TaskRequest request, int taskId)
         {
-            throw new NotImplementedException();
+            return await _taskRepository.UpdateTask(new TaskRepositoryDto()
+            {
+                Description = request.Description,
+                Name = request.Name,
+                PriorityId = request.PriorityId,    
+            }, taskId);
         }
     }
 }

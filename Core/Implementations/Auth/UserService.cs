@@ -44,6 +44,10 @@ namespace Core.Implementations.Auth
 
             registerRequestDto.Password = _passwordHasher.HashPassword(null, registerRequestDto.Password);
 
+            var isUsernameExists = await _authRepository.IsUserExistsByUsername(registerRequestDto.Username);
+
+            if (isUsernameExists) return null;
+
             var registerResponse = await _authRepository.CreateUser(registerRequestDto);
 
             var token = _tokenService.GenerateToken(registerResponse);
@@ -59,6 +63,11 @@ namespace Core.Implementations.Auth
         public async Task<UserResponse> GetUser(int userId)
         {
             return await _authRepository.GetUser(userId);
+        }
+
+        public async Task<bool> IsExistsByUsername(string username)
+        {
+            return await _authRepository.IsUserExistsByUsername(username);
         }
     }
 }

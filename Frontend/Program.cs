@@ -1,3 +1,4 @@
+using Frontend.Forms;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net.Http;
 
@@ -32,6 +33,7 @@ namespace Frontend
 
             services.AddTransient<MainForm>();
             services.AddTransient<LoginRegisterForm>();
+            services.AddTransient<EditForm>();
             services.AddSingleton<AuthenticationDelegatingHandler>();
         }
 

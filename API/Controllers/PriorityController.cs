@@ -1,6 +1,5 @@
 ﻿using Core.Interfaces.Priority;
 using Microsoft.AspNetCore.Mvc;
-using System.Runtime.CompilerServices;
 
 namespace API.Controllers
 {
@@ -13,10 +12,11 @@ namespace API.Controllers
         public PriorityController(IPriorityService priorityService)
         {
             _priorityService = priorityService;
-        }   
+        }
 
-        [HttpGet("priorities")] 
-        public async Task<IActionResult> GetPrioties() {
+        [HttpGet("priorities")]
+        public async Task<IActionResult> GetPrioties()
+        {
 
             return Ok(await _priorityService.GetPriorities());
         }

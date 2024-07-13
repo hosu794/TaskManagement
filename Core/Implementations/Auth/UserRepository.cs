@@ -11,11 +11,11 @@ namespace Core.Services.Auth
     {
         private readonly TaskManagerDbContext _context;
 
-
         public UserRepository(TaskManagerDbContext context)
         {
             _context = context;
         }
+
         public async Task<UserRepositoryResponse?> GetUser(LoginRequestDto request)
         {
             User? user = await _context.Users.
@@ -101,6 +101,11 @@ namespace Core.Services.Auth
             }
 
             return response;
+        }
+
+        public async Task<bool> IsUserExistsByUsername(string username)
+        {
+            return await _context.Users.AnyAsync(x => x.Username == username);
         }
     }
 }

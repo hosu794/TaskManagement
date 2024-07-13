@@ -24,7 +24,7 @@ namespace API.Controllers
 
             var response = await _userService.RegisterUser(request);
 
-            if (response == null) return BadRequest();
+            if (response == null) return BadRequest("Given username already exists");
 
             return Ok(response);
         }
@@ -58,6 +58,11 @@ namespace API.Controllers
             return Ok(await _userService.GetUser(parsedIntUserId));
         }
 
+        [HttpGet("user/exists")]
+        public async Task<IActionResult> IsExistsByUsername([FromQuery] string username)
+        {
+            return Ok(await _userService.IsExistsByUsername(username));
+        }
 
     }
 }
