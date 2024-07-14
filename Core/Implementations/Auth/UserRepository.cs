@@ -107,5 +107,16 @@ namespace Core.Services.Auth
         {
             return await _context.Users.AnyAsync(x => x.Username == username);
         }
+
+        public async Task<List<UserResponse>> GetAllUsers()
+        {
+            return await _context.Users.AsNoTracking()
+                .Select(u => new UserResponse()
+                {
+                    Id = u.Id,
+                    Username = u.Username,
+                    IsManager = 
+                }).ToListAsync();
+        }
     }
 }

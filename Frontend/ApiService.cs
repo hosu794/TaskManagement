@@ -49,6 +49,19 @@ namespace Frontend
             return null;
         }
 
+        public async Task<bool> DeleteTask(int taskId)
+        {
+            var response = await _httpClient.DeleteAsync($"/api/Task/tasks?taskId={taskId}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<bool>(content);
+            }
+
+            return false;
+        }
+
         public async Task<bool> Register(string username, string password, bool isManager)
         {
             var registerRequest = new RegisterRequestDto

@@ -178,9 +178,50 @@ namespace Frontend
 
         }
 
-        private void btnUsun_Click(object sender, EventArgs e)
+        private async void btnUsun_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            if (lvTasks.CheckedItems.Count == 0)
+            {
+                MessageBox.Show("Please select a task to delete.", "No task selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (lvTasks.CheckedItems.Count > 1)
+            {
+                MessageBox.Show("Please select single task", "Too many task selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var selectedItem = lvTasks.CheckedItems[0];
+            int taskId = int.Parse(selectedItem.SubItems[0].Text);
+
+            TaskResponse selectedTask = _tasks.FirstOrDefault(t => t.Id == taskId);
+
+            if (selectedTask == null)
+            {
+                MessageBox.Show("Selected task not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            var deleteResponse = await _apiService.DeleteTask(selectedTask.Id);
+
+            if (!deleteResponse)
+            {
+                MessageBox.Show("Delete error.", "Error" ,MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var taskIndex = _tasks.FindIndex(t => t.Id == selectedTask.Id);
+            if (taskIndex >= 0)
+            {
+                _tasks.Remove(selectedTask);
+            }
+
+            lvTasks.Items.Remove(selectedItem);
+
+            MessageBox.Show($"Deleted successfull task with id {selectedTask.Id}", "Delete");
+
+          
         }
 
         private void btnRefresh_Click(object sender, EventArgs e)

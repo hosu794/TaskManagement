@@ -149,6 +149,7 @@ namespace Frontend
             // splitContainer2
             // 
             splitContainer2.Dock = DockStyle.Fill;
+            splitContainer2.IsSplitterFixed = true;
             splitContainer2.Location = new Point(3, 3);
             splitContainer2.Name = "splitContainer2";
             // 
@@ -236,14 +237,17 @@ namespace Frontend
             // ColName
             // 
             ColName.Text = "Name";
+            ColName.Width = 300;
             // 
             // Description
             // 
             Description.Text = "Description";
+            Description.Width = 400;
             // 
             // CreatedAt
             // 
             CreatedAt.Text = "CreatedAt";
+            CreatedAt.Width = 120;
             // 
             // tabPage2
             // 

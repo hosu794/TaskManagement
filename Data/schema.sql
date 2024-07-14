@@ -3,6 +3,8 @@ CREATE TABLE [User] (
     id int NOT NULL IDENTITY(1,1),
     username varchar(100) NOT NULL,
     password varchar(300) NOT NULL,
+    managerId int NULL,
+    CONSTRAINT User_Manager FOREIGN KEY (managerId) REFERENCES [Manager] (id),
     CONSTRAINT User_pk PRIMARY KEY (id)
 );
 
