@@ -7,10 +7,8 @@ This project is a simple task management system designed to help users manage th
 - [Description](#description)
 - [Features](#features)
 - [Installation](#installation)
-- [Usage](#usage)
 - [Database Schema](#database-schema)
 - [Testing](#testing)
-- [Assumptions](#assumptions)
 - [Further Work](#further-work)
 - [Architectural Decisions](#architectural-decisions)
 
@@ -31,14 +29,6 @@ Tasks are stored in a SQL Server database, with an option to use in-memory stora
 1. User Interface (a simple WinForms application)
 2. Business Logic (a service exposing a REST API)
 
-## Features
-
-- User roles: Basic Users and Managers
-- CRUD operations on tasks
-- Task sharing between users
-- Managers can view subordinates' tasks
-- Monthly task statistics view for managers
-- Stored procedure for task statistics
 
 ## Installation
 
@@ -48,66 +38,205 @@ Tasks are stored in a SQL Server database, with an option to use in-memory stora
    ```
 2. Open the solution in Visual Studio.
 3. Configure the SQL Server connection string in `appsettings.json`.
+4. Run SQL script in your database.
 4. Build and run the solution.
-
-## Usage
 
 ### WinForms Application
 
-- **Login**: Enter credentials to log in as either a basic user or a manager.
-- **Task Management**: Create, update, delete, and view tasks.
-- **Statistics (Manager only)**: View task statistics by month.
+The application includes several WinForms to provide a user-friendly interface for different functionalities:
 
-### REST API
+### ChooseManagerForm.cs
 
-- **Endpoints**:
-  - `GET /tasks`: Retrieve all tasks.
-  - `GET /tasks/{id}`: Retrieve a specific task.
-  - `POST /tasks`: Create a new task.
-  - `PUT /tasks/{id}`: Update an existing task.
-  - `DELETE /tasks/{id}`: Delete a task.
-  - `GET /statistics`: Retrieve task statistics (Manager only).
+This form allows users to select a manager. 
+- A new user is being assigned to a manager
+- An existing user's manager is being changed
+
+### EditForm.cs
+
+This form is used for editing existing tasks. 
+- Text fields for task title and description
+- Dropdown for priority selection
+- Save and Cancel buttons
+
+### LoginRegisterForm.cs
+
+This form serves dual purposes for user authentication:
+-  Login: For existing users to access the system
+-  Register: For new users to create an account
+- Toggle between login and register modes
+
+
+### MainForm.cs
+
+This is the primary interface of the application after login.
+- A list or grid view of the user's tasks
+- Buttons for creating new tasks, editing, and deleting existing ones
+- Navigation to other forms (like ChooseManagerForm or ManagerStatsForm)
+- Logout functionality
+
+### ManagerStatsForm.cs
+
+This form is specific to users with manager roles.
+- Statistical overview of tasks assigned to team members
+
+### ShareTask.cs
+
+This form facilitates the sharing of tasks between users.
+- Choose user to share task
+
+Each of these forms contributes to different aspects of the task management system, providing a comprehensive user interface for both regular users and managers.
+
+## API Endpoints
+
+This section describes all available API endpoints in the Task Management System.
+
+### Task Controller
+
+- `POST api/Task/tasks`
+  - Creates a new task for the logged-in user.
+  - Requires authentication.
+
+- `PUT api/Task/tasks`
+  - Updates an existing task.
+  - Requires authentication.
+
+- `DELETE api/Task/tasks`
+  - Deletes a task with the given ID.
+  - Requires authentication.
+
+- `POST api/Task/share/task`
+  - Shares a task with another user.
+  - Requires authentication.
+
+- `DELETE api/Task/shared/tasks`
+  - Removes a shared task (not implemented).
+  - Requires authentication.
+
+- `GET api/Task/tasks`
+  - Retrieves all tasks for the logged-in user.
+  - Requires authentication.
+
+- `GET api/Task/shared/tasks/by/user`
+  - Retrieves tasks shared by the logged-in user.
+  - Requires authentication.
+
+- `GET api/Task/shared/tasks/for/user`
+  - Retrieves tasks shared with the logged-in user.
+  - Requires authentication.
+
+- `GET api/Task/tasks/managers`
+  - Retrieves tasks of subordinates for the logged-in manager.
+  - Requires authentication and manager role.
+
+- `GET api/Task/tasks/manager/stats`
+  - Retrieves task statistics of subordinates for the logged-in manager.
+  - Requires authentication and manager role.
+
+### Priority Controller
+
+- `GET api/Priority/priorities`
+  - Retrieves a list of all priorities.
+
+### User Controller
+
+- `POST api/User/register`
+  - Registers a new user.
+
+- `POST api/User/login`
+  - Authenticates a user.
+
+- `GET api/User/manager`
+  - Checks manager authorization (managers only).
+  - Requires authentication and manager role.
+
+- `GET api/User/current`
+  - Retrieves data for the currently logged-in user.
+  - Requires authentication.
+
+- `GET api/User/user/exists`
+  - Checks if a user with the given username exists.
+
+- `GET api/User/all`
+  - Retrieves a list of all users.
+
+- `PUT api/User/managers`
+  - Assigns a manager to a user.
+  - Requires authentication.
+
+- `GET api/User/managers`
+  - Retrieves a list of all managers.
+  - Requires authentication.
+
+Most endpoints require authentication, and some are accessible only to users with the manager role. The system uses role-based access control to manage access to different functionalities.
 
 ## Database Schema
 
-The database schema includes the following tables:
+The database schema consists of the following tables and relationships:
 
-- **Users**: Stores user information (ID, name, role).
-- **Tasks**: Stores task information (ID, header, priority, description, user ID).
-- **TaskShares**: Stores information about task sharing between users (task ID, user ID).
+1. **Priority**
+   - `id` (int, primary key)
+   - `name` (varchar(100))
+
+2. **User**
+   - `id` (int, primary key)
+   - `username` (varchar(100))
+   - `password` (varchar(300))
+   - `managerId` (int, foreign key to Manager)
+
+3. **Manager**
+   - `userId` (int, primary key, foreign key to User)
+
+4. **TaskTodo**
+   - `id` (int, primary key)
+   - `title` (varchar(100))
+   - `description` (text)
+   - `createdAt` (datetime)
+   - `updatedAt` (datetime)
+   - `userId` (int, foreign key to User)
+   - `priorityId` (int, foreign key to Priority)
+
+5. **SharedTask**
+   - `userId` (int, foreign key to User)
+   - `Task_id` (int, foreign key to TaskTodo)
+   - Composite primary key (userId, Task_id)
 
 ## Testing
 
-Sample tests are provided to verify the functionality of the system. The tests cover:
+Due to time constraints, comprehensive testing has not been implemented. This is an area that requires further work to ensure the reliability and robustness of the system.
 
-- CRUD operations for tasks
-- User access control
-- Task sharing
-- Statistics calculation
+## Features
 
-Run the tests using the Visual Studio Test Explorer.
+- User roles: Basic Users and Managers
+- Role-based authorization for users and managers
+- CRUD operations on tasks
+- Task sharing between users
+- Managers can view subordinates' tasks
+- Monthly task statistics view for managers
+- Stored procedure for task statistics
 
-## Assumptions
+## Project Structure
 
-- User authentication and authorization are simplified for this task.
-- The system assumes that tasks are always created by authenticated users.
-- Task sharing functionality is implemented by copying the task reference to the shared user.
+The application is divided into four main modules:
+
+1. **Data**: Handles database operations and data persistence.
+2. **Frontend**: Contains the WinForms user interface.
+3. **Core**: Houses the core business logic and domain models.
+4. **API**: Implements the REST API for communication between the frontend and backend.
 
 ## Further Work
 
-- Implement a more robust authentication and authorization mechanism.
-- Enhance the UI/UX of the WinForms application.
-- Add more comprehensive tests, including edge cases and performance testing.
-- Optimize the database schema for large datasets.
-- Implement notification features for task updates and shares.
+In addition to the points mentioned earlier:
+
+- Implement comprehensive unit tests and integration tests.
+- Improve the task sharing functionality, which is currently not fully developed.
+- Refactor and improve code quality. The current implementation needs further optimization and better separation of concerns.
+- Enhance error handling and logging throughout the application.
+- Implement more robust security measures, especially for user authentication and authorization.
 
 ## Architectural Decisions
 
+- **Modular Architecture**: The application is split into Data, Frontend, Core, and API modules to improve maintainability and allow for easier future expansions or modifications.
 - **Entity Framework**: Chosen for its simplicity and ease of use for database operations.
 - **WinForms**: Selected for a simple and quick user interface implementation.
 - **REST API**: Provides a clean separation between the UI and business logic, enabling potential future expansion to other types of clients (e.g., web, mobile).
-- **In-Memory Storage Option**: Allows for quick setup and testing without the need for a full SQL Server instance.
-
-**Note**: The feature to display shared comments was implemented, but not fully completed.
-
-Feel free to explore the code and provide feedback or contribute to the project.
+- **Role-based Authorization**: Implemented to ensure proper access control for users and managers, enhancing system security and functionality segregation.

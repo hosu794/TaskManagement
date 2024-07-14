@@ -12,7 +12,6 @@ CREATE TABLE [Priority] (
     CONSTRAINT Priority_pk PRIMARY KEY (id)
 );
 
--- Create User table (without the foreign key constraint to Manager initially)
 CREATE TABLE [User] (
     id int NOT NULL IDENTITY(1,1),
     username varchar(100) NOT NULL,
@@ -21,7 +20,6 @@ CREATE TABLE [User] (
     CONSTRAINT User_pk PRIMARY KEY (id)
 );
 
--- Create Manager table
 CREATE TABLE [Manager] (
     userId int NOT NULL,
     CONSTRAINT Manager_pk PRIMARY KEY (userId),
@@ -31,7 +29,6 @@ CREATE TABLE [Manager] (
 ALTER TABLE [User]
 ADD CONSTRAINT User_Manager FOREIGN KEY (managerId) REFERENCES [Manager] (userId);
 
--- Create TaskTodo table
 CREATE TABLE [TaskTodo] (
     id int NOT NULL IDENTITY(1,1),
     title varchar(100) NOT NULL,
@@ -45,7 +42,6 @@ CREATE TABLE [TaskTodo] (
     CONSTRAINT Task_Priority FOREIGN KEY (priorityId) REFERENCES Priority (id)
 );
 
--- Create SharedTask table
 CREATE TABLE SharedTask (
     userId int NOT NULL,
     Task_id int NOT NULL,
@@ -54,7 +50,6 @@ CREATE TABLE SharedTask (
     CONSTRAINT SharedTask_Task FOREIGN KEY (Task_id) REFERENCES TaskTodo (id)
 );
 
--- Insert initial priority values
 INSERT INTO Priority (name) VALUES ('Low');
 INSERT INTO Priority (name) VALUES ('Medium');
 INSERT INTO Priority (name) VALUES ('High');
