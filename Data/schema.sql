@@ -8,12 +8,13 @@ BEGIN
     ALTER TABLE [User] DROP CONSTRAINT User_Manager;
 END
 
+GO
+
 DROP TABLE IF EXISTS [User];
 DROP TABLE IF EXISTS [Manager];
-
 DROP TABLE IF EXISTS [Priority];
 
-GO; 
+GO
 
 DROP PROCEDURE IF EXISTS [GetTaskStatisticsByManager];
 
@@ -63,7 +64,7 @@ INSERT INTO Priority (name) VALUES ('Low');
 INSERT INTO Priority (name) VALUES ('Medium');
 INSERT INTO Priority (name) VALUES ('High');
 
-GO;
+GO
 
 CREATE PROCEDURE GetTaskStatisticsByManager
     @ManagerId INT
