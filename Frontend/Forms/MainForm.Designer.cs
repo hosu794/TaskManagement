@@ -32,8 +32,8 @@ namespace Frontend
         private void InitializeComponent()
         {
             splitContainer1 = new SplitContainer();
+            btnChooseManager = new Button();
             cbIsManager = new CheckBox();
-            button1 = new Button();
             btnWyloguj = new Button();
             lbUsername = new Label();
             tabControl1 = new TabControl();
@@ -50,7 +50,26 @@ namespace Frontend
             Description = new ColumnHeader();
             CreatedAt = new ColumnHeader();
             tabPage2 = new TabPage();
+            splitContainer3 = new SplitContainer();
+            splitContainer4 = new SplitContainer();
+            label1 = new Label();
+            lvSharedTaskByUser = new ListView();
+            btnShareEdit = new Button();
+            splitContainer5 = new SplitContainer();
+            label2 = new Label();
+            lvSharedTaskForUser = new ListView();
             tabPage3 = new TabPage();
+            splitContainer6 = new SplitContainer();
+            listView3 = new ListView();
+            button3 = new Button();
+            clId = new ColumnHeader();
+            clName = new ColumnHeader();
+            clDescription = new ColumnHeader();
+            clCreatedAt = new ColumnHeader();
+            colId = new ColumnHeader();
+            chName = new ColumnHeader();
+            chDescription = new ColumnHeader();
+            chCreatedAt = new ColumnHeader();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
@@ -61,6 +80,23 @@ namespace Frontend
             splitContainer2.Panel1.SuspendLayout();
             splitContainer2.Panel2.SuspendLayout();
             splitContainer2.SuspendLayout();
+            tabPage2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)splitContainer3).BeginInit();
+            splitContainer3.Panel1.SuspendLayout();
+            splitContainer3.Panel2.SuspendLayout();
+            splitContainer3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)splitContainer4).BeginInit();
+            splitContainer4.Panel1.SuspendLayout();
+            splitContainer4.Panel2.SuspendLayout();
+            splitContainer4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)splitContainer5).BeginInit();
+            splitContainer5.Panel1.SuspendLayout();
+            splitContainer5.SuspendLayout();
+            tabPage3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)splitContainer6).BeginInit();
+            splitContainer6.Panel1.SuspendLayout();
+            splitContainer6.Panel2.SuspendLayout();
+            splitContainer6.SuspendLayout();
             SuspendLayout();
             // 
             // splitContainer1
@@ -72,8 +108,8 @@ namespace Frontend
             // 
             // splitContainer1.Panel1
             // 
+            splitContainer1.Panel1.Controls.Add(btnChooseManager);
             splitContainer1.Panel1.Controls.Add(cbIsManager);
-            splitContainer1.Panel1.Controls.Add(button1);
             splitContainer1.Panel1.Controls.Add(btnWyloguj);
             splitContainer1.Panel1.Controls.Add(lbUsername);
             // 
@@ -84,6 +120,17 @@ namespace Frontend
             splitContainer1.SplitterDistance = 46;
             splitContainer1.TabIndex = 0;
             // 
+            // btnChooseManager
+            // 
+            btnChooseManager.Location = new Point(732, 8);
+            btnChooseManager.Name = "btnChooseManager";
+            btnChooseManager.Size = new Size(114, 31);
+            btnChooseManager.TabIndex = 5;
+            btnChooseManager.Text = "Choose manager";
+            btnChooseManager.UseVisualStyleBackColor = true;
+            btnChooseManager.Visible = false;
+            btnChooseManager.Click += btnChooseManager_Click;
+            // 
             // cbIsManager
             // 
             cbIsManager.AutoCheck = false;
@@ -92,19 +139,10 @@ namespace Frontend
             cbIsManager.CheckState = CheckState.Checked;
             cbIsManager.Location = new Point(864, 15);
             cbIsManager.Name = "cbIsManager";
-            cbIsManager.Size = new Size(75, 19);
+            cbIsManager.Size = new Size(73, 19);
             cbIsManager.TabIndex = 4;
-            cbIsManager.Text = "IsManger";
+            cbIsManager.Text = "Manager";
             cbIsManager.UseVisualStyleBackColor = true;
-            // 
-            // button1
-            // 
-            button1.Location = new Point(12, 8);
-            button1.Name = "button1";
-            button1.Size = new Size(114, 31);
-            button1.TabIndex = 3;
-            button1.Text = "Report";
-            button1.UseVisualStyleBackColor = true;
             // 
             // btnWyloguj
             // 
@@ -114,6 +152,7 @@ namespace Frontend
             btnWyloguj.TabIndex = 2;
             btnWyloguj.Text = "Log out";
             btnWyloguj.UseVisualStyleBackColor = true;
+            btnWyloguj.Click += btnWyloguj_Click;
             // 
             // lbUsername
             // 
@@ -216,7 +255,7 @@ namespace Frontend
             btnDodaj.TabIndex = 5;
             btnDodaj.Text = "Add";
             btnDodaj.UseVisualStyleBackColor = true;
-            btnDodaj.Click += btnDodaj_Click;
+            btnDodaj.Click += btnAdd_Click;
             // 
             // lvTasks
             // 
@@ -251,6 +290,7 @@ namespace Frontend
             // 
             // tabPage2
             // 
+            tabPage2.Controls.Add(splitContainer3);
             tabPage2.Location = new Point(4, 24);
             tabPage2.Name = "tabPage2";
             tabPage2.Padding = new Padding(3);
@@ -259,8 +299,107 @@ namespace Frontend
             tabPage2.Text = "SharedTasks";
             tabPage2.UseVisualStyleBackColor = true;
             // 
+            // splitContainer3
+            // 
+            splitContainer3.Dock = DockStyle.Fill;
+            splitContainer3.Location = new Point(3, 3);
+            splitContainer3.Name = "splitContainer3";
+            // 
+            // splitContainer3.Panel1
+            // 
+            splitContainer3.Panel1.Controls.Add(splitContainer4);
+            // 
+            // splitContainer3.Panel2
+            // 
+            splitContainer3.Panel2.Controls.Add(splitContainer5);
+            splitContainer3.Size = new Size(1134, 512);
+            splitContainer3.SplitterDistance = 533;
+            splitContainer3.TabIndex = 0;
+            // 
+            // splitContainer4
+            // 
+            splitContainer4.Dock = DockStyle.Fill;
+            splitContainer4.Location = new Point(0, 0);
+            splitContainer4.Name = "splitContainer4";
+            splitContainer4.Orientation = Orientation.Horizontal;
+            // 
+            // splitContainer4.Panel1
+            // 
+            splitContainer4.Panel1.Controls.Add(label1);
+            splitContainer4.Panel1.Controls.Add(lvSharedTaskByUser);
+            // 
+            // splitContainer4.Panel2
+            // 
+            splitContainer4.Panel2.Controls.Add(btnShareEdit);
+            splitContainer4.Size = new Size(533, 512);
+            splitContainer4.SplitterDistance = 426;
+            splitContainer4.TabIndex = 0;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(223, 17);
+            label1.Name = "label1";
+            label1.Size = new Size(82, 15);
+            label1.TabIndex = 1;
+            label1.Text = "Shared by you";
+            // 
+            // lvSharedTaskByUser
+            // 
+            lvSharedTaskByUser.Columns.AddRange(new ColumnHeader[] { clId, clName, clDescription, clCreatedAt });
+            lvSharedTaskByUser.Location = new Point(0, 44);
+            lvSharedTaskByUser.Name = "lvSharedTaskByUser";
+            lvSharedTaskByUser.Size = new Size(533, 379);
+            lvSharedTaskByUser.TabIndex = 0;
+            lvSharedTaskByUser.UseCompatibleStateImageBehavior = false;
+            lvSharedTaskByUser.View = View.Details;
+            // 
+            // btnShareEdit
+            // 
+            btnShareEdit.Location = new Point(20, 26);
+            btnShareEdit.Name = "btnShareEdit";
+            btnShareEdit.Size = new Size(109, 34);
+            btnShareEdit.TabIndex = 0;
+            btnShareEdit.Text = "Edit Share";
+            btnShareEdit.UseVisualStyleBackColor = true;
+            // 
+            // splitContainer5
+            // 
+            splitContainer5.Dock = DockStyle.Fill;
+            splitContainer5.Location = new Point(0, 0);
+            splitContainer5.Name = "splitContainer5";
+            splitContainer5.Orientation = Orientation.Horizontal;
+            // 
+            // splitContainer5.Panel1
+            // 
+            splitContainer5.Panel1.Controls.Add(label2);
+            splitContainer5.Panel1.Controls.Add(lvSharedTaskForUser);
+            splitContainer5.Size = new Size(597, 512);
+            splitContainer5.SplitterDistance = 427;
+            splitContainer5.TabIndex = 0;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(266, 17);
+            label2.Name = "label2";
+            label2.Size = new Size(80, 15);
+            label2.TabIndex = 1;
+            label2.Text = "Shared to you";
+            // 
+            // lvSharedTaskForUser
+            // 
+            lvSharedTaskForUser.Columns.AddRange(new ColumnHeader[] { colId, chName, chDescription, chCreatedAt });
+            lvSharedTaskForUser.Location = new Point(3, 44);
+            lvSharedTaskForUser.Name = "lvSharedTaskForUser";
+            lvSharedTaskForUser.Size = new Size(591, 379);
+            lvSharedTaskForUser.TabIndex = 0;
+            lvSharedTaskForUser.UseCompatibleStateImageBehavior = false;
+            lvSharedTaskForUser.View = View.Details;
+            // 
             // tabPage3
             // 
+            tabPage3.Controls.Add(splitContainer6);
             tabPage3.Location = new Point(4, 24);
             tabPage3.Name = "tabPage3";
             tabPage3.Padding = new Padding(3);
@@ -268,6 +407,62 @@ namespace Frontend
             tabPage3.TabIndex = 2;
             tabPage3.Text = "User tasks";
             tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // splitContainer6
+            // 
+            splitContainer6.Dock = DockStyle.Fill;
+            splitContainer6.Location = new Point(3, 3);
+            splitContainer6.Name = "splitContainer6";
+            splitContainer6.Orientation = Orientation.Horizontal;
+            // 
+            // splitContainer6.Panel1
+            // 
+            splitContainer6.Panel1.Controls.Add(listView3);
+            // 
+            // splitContainer6.Panel2
+            // 
+            splitContainer6.Panel2.Controls.Add(button3);
+            splitContainer6.Size = new Size(1134, 512);
+            splitContainer6.SplitterDistance = 446;
+            splitContainer6.TabIndex = 0;
+            // 
+            // listView3
+            // 
+            listView3.Dock = DockStyle.Fill;
+            listView3.Location = new Point(0, 0);
+            listView3.Name = "listView3";
+            listView3.Size = new Size(1134, 446);
+            listView3.TabIndex = 0;
+            listView3.UseCompatibleStateImageBehavior = false;
+            // 
+            // button3
+            // 
+            button3.Location = new Point(13, 13);
+            button3.Name = "button3";
+            button3.Size = new Size(172, 37);
+            button3.TabIndex = 0;
+            button3.Text = "Genererate report";
+            button3.UseVisualStyleBackColor = true;
+            // 
+            // clId
+            // 
+            clId.Text = "Id";
+            // 
+            // clName
+            // 
+            clName.Text = "Name";
+            // 
+            // colId
+            // 
+            colId.Text = "Id";
+            // 
+            // chDescription
+            // 
+            chDescription.Text = "Description";
+            // 
+            // chCreatedAt
+            // 
+            chCreatedAt.Text = "chCreatedAt";
             // 
             // MainForm
             // 
@@ -292,6 +487,25 @@ namespace Frontend
             splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)splitContainer2).EndInit();
             splitContainer2.ResumeLayout(false);
+            tabPage2.ResumeLayout(false);
+            splitContainer3.Panel1.ResumeLayout(false);
+            splitContainer3.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)splitContainer3).EndInit();
+            splitContainer3.ResumeLayout(false);
+            splitContainer4.Panel1.ResumeLayout(false);
+            splitContainer4.Panel1.PerformLayout();
+            splitContainer4.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)splitContainer4).EndInit();
+            splitContainer4.ResumeLayout(false);
+            splitContainer5.Panel1.ResumeLayout(false);
+            splitContainer5.Panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)splitContainer5).EndInit();
+            splitContainer5.ResumeLayout(false);
+            tabPage3.ResumeLayout(false);
+            splitContainer6.Panel1.ResumeLayout(false);
+            splitContainer6.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)splitContainer6).EndInit();
+            splitContainer6.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -299,7 +513,6 @@ namespace Frontend
 
         private SplitContainer splitContainer1;
         private CheckBox cbIsManager;
-        private Button button1;
         private Button btnWyloguj;
         private Label lbUsername;
         private TabControl tabControl1;
@@ -317,5 +530,25 @@ namespace Frontend
         private ColumnHeader ColName;
         private ColumnHeader Description;
         private ColumnHeader CreatedAt;
+        private Button btnChooseManager;
+        private SplitContainer splitContainer3;
+        private SplitContainer splitContainer4;
+        private SplitContainer splitContainer5;
+        private Label label1;
+        private ListView lvSharedTaskByUser;
+        private Label label2;
+        private ListView lvSharedTaskForUser;
+        private Button btnShareEdit;
+        private SplitContainer splitContainer6;
+        private ListView listView3;
+        private Button button3;
+        private ColumnHeader clId;
+        private ColumnHeader clName;
+        private ColumnHeader clDescription;
+        private ColumnHeader clCreatedAt;
+        private ColumnHeader colId;
+        private ColumnHeader chName;
+        private ColumnHeader chDescription;
+        private ColumnHeader chCreatedAt;
     }
 }

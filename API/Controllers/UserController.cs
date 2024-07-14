@@ -64,5 +64,10 @@ namespace API.Controllers
             return Ok(await _userService.IsExistsByUsername(username));
         }
 
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            return Ok(await _userService.GetAllUsers());
+        }
     }
 }

@@ -111,11 +111,12 @@ namespace Core.Services.Auth
         public async Task<List<UserResponse>> GetAllUsers()
         {
             return await _context.Users.AsNoTracking()
+                .Include(x => x.Manager)
                 .Select(u => new UserResponse()
                 {
                     Id = u.Id,
                     Username = u.Username,
-                    IsManager = 
+                    IsManager = u.Manager != null ? true : false,
                 }).ToListAsync();
         }
     }

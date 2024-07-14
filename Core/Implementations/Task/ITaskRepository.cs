@@ -10,5 +10,6 @@ namespace Core.Implementations.Task
         Task<List<TaskResponse>> GetTaskByUserId(int userId);
         Task<List<TaskResponse>> GetTaskSharedForUser(int userId);
         Task<List<TaskResponse>> GetTaskSharedByUser(int userId);
+        Task<TaskResponse> ShareTask(int taskId, int userId);
     }
 }

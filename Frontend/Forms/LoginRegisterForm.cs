@@ -21,11 +21,11 @@
             {
                 btnLoginRegister.Text = "Logowanie";
                 cbManager.Visible = false;
-                return;
+            } else
+            {
+                btnLoginRegister.Text = "Rejestracja";
+                cbManager.Visible = true;
             }
-
-            btnLoginRegister.Text = "Rejestracja";
-            cbManager.Visible = true;
         }
 
         private async void btnLoginRegister_Click(object sender, EventArgs e)
@@ -49,7 +49,7 @@
                 return;
             }
 
-            var isRegisterCorrect = await _apiService.Register(tbUsername.Text, tbPassword.Text, cbChangeAuth.Checked);
+            var isRegisterCorrect = await _apiService.Register(tbUsername.Text, tbPassword.Text, cbManager.Checked);
 
             if (!isRegisterCorrect)
             {

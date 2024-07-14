@@ -17,7 +17,7 @@ namespace Core.Interfaces.Task
 
         public async Task<TaskResponse> CreateTask(TaskRequest request, int userId)
         {
-            if (!await _priorityRepository.IsPriorityExistsById(userId)) throw new Exception("Prority not exists!");
+            if (!await _priorityRepository.IsPriorityExistsById(request.PriorityId)) throw new Exception("Prority not exists!");
 
             return await _taskRepository.CreateTask(new TaskRepositoryDto { UserId = userId, Name = request.Name, Description = request.Description, PriorityId = request.PriorityId });   
         }
@@ -27,14 +27,24 @@ namespace Core.Interfaces.Task
             return await _taskRepository.DeleteTask(taskId, userId);
         }
 
-        public Task<List<TaskResponse>> GetSharedTaskByUserId(string userId)
+        public async Task<List<TaskResponse>> GetSharedTaskByUserId(int userId)
         {
-            throw new NotImplementedException();
+            return await _taskRepository.GetTaskSharedByUser(userId);
+        }
+
+        public async Task<List<TaskResponse>> GetSharedTaskForUserId(int userId)
+        {
+            return await _taskRepository.GetTaskSharedForUser(userId);
         }
 
         public async Task<List<TaskResponse>> GetTaskByUserId(int userId)
         {
             return await _taskRepository.GetTaskByUserId(userId);
+        }
+
+        public async Task<TaskResponse> ShareTask(int taskId, int userId)
+        {
+            return await _taskRepository.ShareTask(taskId, userId); 
         }
 
         public async Task<TaskResponse> UpdateTask(TaskRequest request, int taskId)

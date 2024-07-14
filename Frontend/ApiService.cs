@@ -6,6 +6,7 @@ using Microsoft.Identity.Client.NativeInterop;
 using Newtonsoft.Json;
 using System.Net.Http.Json;
 using System.Runtime.CompilerServices;
+using TaskManagement.Core.Models.ShareTask;
 using TaskManagement.Core.Models.User;
 using TaskManagement.Data.DbModels;
 using LoginRequestDto = Core.Models.Auth.LoginRequestDto;
@@ -141,6 +142,65 @@ namespace Frontend
 
             return new List<PriorityResponse>();
 
+        }
+
+        public async Task<List<UserResponse>> GetAllUsers()
+        {
+            var response = await _httpClient.GetAsync("api/User/all");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<List<UserResponse>>(content);
+            }
+
+            return new List<UserResponse>();
+        }
+
+        public async Task<TaskResponse> ShareTask(int taskId, int userId)
+        {
+            var request = new ShareTaskRequest()
+            {
+                UserId = userId,
+                TaskId = taskId
+            };
+
+            var response = await _httpClient.PostAsJsonAsync("api/Task/share/task", request);
+
+            if  (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<TaskResponse>(content);
+            }
+
+            return null;
+
+        }
+
+        public async Task<List<TaskResponse>> GetSharedTaskByUser()
+        {
+            var response = await _httpClient.GetAsync("api/Task/shared/tasks/by/user");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<List<TaskResponse>>(content);
+            }
+
+            return new List<TaskResponse>();
+        }
+
+        public async Task<List<TaskResponse>> GetSharedTaskForUser()
+        {
+            var response = await _httpClient.GetAsync("api/Task/shared/tasks/for/user");
+
+            if(response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<List<TaskResponse>>(content);
+            }
+
+            return new List<TaskResponse>();
         }
     }
 }

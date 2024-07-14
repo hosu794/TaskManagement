@@ -78,6 +78,7 @@
             // 
             // cbPriority
             // 
+            cbPriority.DropDownStyle = ComboBoxStyle.DropDownList;
             cbPriority.FormattingEnabled = true;
             cbPriority.Location = new Point(12, 269);
             cbPriority.Name = "cbPriority";

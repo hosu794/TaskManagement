@@ -6,19 +6,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace TaskManagement.Data.DbModels;
 
-[PrimaryKey("Id", "UserId")]
 [Table("Manager")]
 public partial class Manager
 {
-    [Key]
-    [Column("id")]
-    public int Id { get; set; }
-
     [Key]
     [Column("userId")]
     public int UserId { get; set; }
 
     [ForeignKey("UserId")]
-    [InverseProperty("Managers")]
+    [InverseProperty("Manager")]
     public virtual User User { get; set; } = null!;
+
+    [InverseProperty("ManagerNavigation")]
+    public virtual ICollection<User> Users { get; set; } = new List<User>();
 }

@@ -9,20 +9,20 @@ namespace Core.Implementations.Auth
     public class UserService : IUserService
     {
         private readonly ITokenService _tokenService;
-        private readonly IUserRepository _authRepository;
+        private readonly IUserRepository _userRepository;
         private readonly IPasswordHasher<User> _passwordHasher;
 
         public UserService(ITokenService tokenService, IUserRepository authRepository, IPasswordHasher<User> passwordHasher)
         {
 
-            _authRepository = authRepository;
+            _userRepository = authRepository;
             _tokenService = tokenService;
             _passwordHasher = passwordHasher;
         }
 
         public async Task<TokenResponse> Login(LoginRequestDto loginRequestDto)
         {
-            var userResult = await _authRepository.GetUser(loginRequestDto);
+            var userResult = await _userRepository.GetUser(loginRequestDto);
 
             if (userResult == null) throw new Exception("User with given login not exists!");
 
@@ -44,11 +44,11 @@ namespace Core.Implementations.Auth
 
             registerRequestDto.Password = _passwordHasher.HashPassword(null, registerRequestDto.Password);
 
-            var isUsernameExists = await _authRepository.IsUserExistsByUsername(registerRequestDto.Username);
+            var isUsernameExists = await _userRepository.IsUserExistsByUsername(registerRequestDto.Username);
 
             if (isUsernameExists) return null;
 
-            var registerResponse = await _authRepository.CreateUser(registerRequestDto);
+            var registerResponse = await _userRepository.CreateUser(registerRequestDto);
 
             var token = _tokenService.GenerateToken(registerResponse);
 
@@ -62,12 +62,17 @@ namespace Core.Implementations.Auth
 
         public async Task<UserResponse> GetUser(int userId)
         {
-            return await _authRepository.GetUser(userId);
+            return await _userRepository.GetUser(userId);
         }
 
         public async Task<bool> IsExistsByUsername(string username)
         {
-            return await _authRepository.IsUserExistsByUsername(username);
+            return await _userRepository.IsUserExistsByUsername(username);
+        }
+
+        public async Task<List<UserResponse>> GetAllUsers()
+        {
+            return await _userRepository.GetAllUsers();
         }
     }
 }

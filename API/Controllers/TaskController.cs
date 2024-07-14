@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Validations;
 using System.Security.Claims;
+using TaskManagement.Core.Models.ShareTask;
 
 namespace API.Controllers
 {
@@ -53,11 +54,11 @@ namespace API.Controllers
             return Ok(await _taskService.DeleteTaskById(taskId, parsedIntUserId));
         }
 
-        [HttpPost("shared/task")]
+        [HttpPost("share/task")]
         [Authorize]
-        public async Task<IActionResult> ShareTask([FromQuery] int taskId, [FromQuery] int userId)
+        public async Task<IActionResult> ShareTask([FromBody] ShareTaskRequest request)
         {
-            throw new NotImplementedException();
+            return Ok(await _taskService.ShareTask(request.TaskId, request.UserId));
         }
 
         [HttpDelete("shared/tasks")]
@@ -77,16 +78,24 @@ namespace API.Controllers
             return Ok(await _taskService.GetTaskByUserId(parsedIntUserId));
         }
 
-        [HttpGet("shared/tasks")]
+        [HttpGet("shared/tasks/by/user")]
         [Authorize]
-        public async Task<IActionResult> GetSharedTasks()
+        public async Task<IActionResult> GetSharedTaskByUser()
         {
             var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
             int.TryParse(userId, out int parsedIntUserId);
 
-            throw new NotImplementedException();
+            return Ok(await _taskService.GetSharedTaskByUserId(parsedIntUserId));
         }
 
+        [HttpGet("shared/tasks/for/user")]
+        public async Task<IActionResult> GetSharedTaskForUser()
+        {
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            int.TryParse(userId, out int parsedIntUserId);
+
+            return Ok(await _taskService.GetSharedTaskForUserId(parsedIntUserId));
+        }
 
         [HttpGet("tasks/attached")]
         [Authorize]

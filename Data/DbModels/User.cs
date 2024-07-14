@@ -1,6 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace TaskManagement.Data.DbModels;
 
@@ -21,8 +23,15 @@ public partial class User
     [Unicode(false)]
     public string Password { get; set; } = null!;
 
+    [Column("managerId")]
+    public int? ManagerId { get; set; }
+
     [InverseProperty("User")]
-    public virtual ICollection<Manager> Managers { get; set; } = new List<Manager>();
+    public virtual Manager? Manager { get; set; }
+
+    [ForeignKey("ManagerId")]
+    [InverseProperty("Users")]
+    public virtual Manager? ManagerNavigation { get; set; }
 
     [InverseProperty("User")]
     public virtual ICollection<TaskTodo> TaskTodos { get; set; } = new List<TaskTodo>();

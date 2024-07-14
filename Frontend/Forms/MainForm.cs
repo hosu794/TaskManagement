@@ -1,7 +1,5 @@
 using Core.Models.Priority;
 using Core.Models.Task;
-using Frontend.Forms;
-using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.Extensions.DependencyInjection;
 using System.Threading.Tasks;
 using TaskManagement.Core.Models.User;
@@ -14,8 +12,10 @@ namespace Frontend
         private readonly IServiceProvider _serviceProvider;
         private UserResponse _currentUser;
         private List<TaskResponse> _tasks;
-        private List<TaskResponse> _sharedTasks;
+        private List<TaskResponse> _sharedTasksByUser;
+        private List<TaskResponse> _sharedTaskForUser;
         private List<PriorityResponse> _priorities;
+        private List<UserResponse> _users;
 
         public MainForm(ApiService apiService, IServiceProvider serviceProvider)
         {
@@ -45,10 +45,16 @@ namespace Frontend
                 {
                     cbIsManager.Checked = false;
                     tabControl1.TabPages.Remove(tabPage3);
+                    btnChooseManager.Visible = true;
                 }
 
-                await LoadTasks();
-                await LoadPriorities();
+                await Task.WhenAll(
+                    LoadTasks(),
+                    LoadPriorities(),
+                    LoadAllUsers(), 
+                    LoadSharedTasksByUser(),
+                    LoadShareTasksForUser()
+                    );
             }
         }
 
@@ -77,6 +83,53 @@ namespace Frontend
             }
         }
 
+        private async Task LoadSharedTasksByUser()
+        {
+            try
+            {
+                _sharedTasksByUser = await _apiService.GetSharedTaskByUser();
+
+                lvSharedTaskByUser.Items.Clear();
+                foreach (var task in _sharedTasksByUser)
+                {
+
+                    var item = new ListViewItem(task.Id.ToString());
+                    item.SubItems.Add(task.Name);
+                    item.SubItems.Add(task.Description);
+                    item.SubItems.Add(task.CreatedAt.ToString());
+
+                    lvSharedTaskByUser.Items.Add(item);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading shared tasks by user: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private async Task LoadShareTasksForUser()
+        {
+            try
+            {
+                _sharedTaskForUser = await _apiService.GetSharedTaskForUser();
+
+                lvSharedTaskForUser.Items.Clear();
+                foreach (var task in _sharedTaskForUser)
+                {
+
+                    var item = new ListViewItem(task.Id.ToString());
+                    item.SubItems.Add(task.Name);
+                    item.SubItems.Add(task.Description);
+                    item.SubItems.Add(task.CreatedAt.ToString());
+
+                    lvSharedTaskForUser.Items.Add(item);
+                }
+            } catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading shared tasks by user: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
         private async Task LoadPriorities()
         {
             try
@@ -91,7 +144,19 @@ namespace Frontend
             }
         }
 
-        private async void btnDodaj_Click(object sender, EventArgs e)
+        private async Task LoadAllUsers()
+        {
+            try
+            {
+                _users = await _apiService.GetAllUsers();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading users: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private async void btnAdd_Click(object sender, EventArgs e)
         {
             using (var AddForm = _serviceProvider.GetRequiredService<Forms.EditForm>())
             {
@@ -114,10 +179,11 @@ namespace Frontend
                     item.SubItems.Add(taskResponse.CreatedAt.ToString());
 
                     lvTasks.Items.Add(item);
+                    _tasks.Add(taskResponse);
 
                     MessageBox.Show($"Add new task with id: {taskResponse.Id}");
                 }
-                
+
             }
         }
 
@@ -166,7 +232,7 @@ namespace Frontend
                         _tasks[taskIndex] = updatedTask;
                     }
 
-                   
+
                     selectedItem.SubItems[1].Text = updatedTask.Name;
                     selectedItem.SubItems[2].Text = updatedTask.Description;
                     selectedItem.SubItems[3].Text = updatedTask.CreatedAt.ToString();
@@ -207,7 +273,7 @@ namespace Frontend
 
             if (!deleteResponse)
             {
-                MessageBox.Show("Delete error.", "Error" ,MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Delete error.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -221,7 +287,7 @@ namespace Frontend
 
             MessageBox.Show($"Deleted successfull task with id {selectedTask.Id}", "Delete");
 
-          
+
         }
 
         private void btnRefresh_Click(object sender, EventArgs e)
@@ -229,9 +295,75 @@ namespace Frontend
 
         }
 
-        private void btnShare_Click(object sender, EventArgs e)
+        private async void btnShare_Click(object sender, EventArgs e)
+        {
+            if (lvTasks.CheckedItems.Count == 0)
+            {
+                MessageBox.Show("Please select a task to share.", "No task selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (lvTasks.CheckedItems.Count > 1)
+            {
+                MessageBox.Show("Please select single task", "Too many task selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var selectedItem = lvTasks.CheckedItems[0];
+            int taskId = int.Parse(selectedItem.SubItems[0].Text);
+
+            TaskResponse selectedTask = _tasks.FirstOrDefault(t => t.Id == taskId);
+
+            if (selectedTask == null)
+            {
+                MessageBox.Show("Selected task not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            using (var ShareForm = _serviceProvider.GetRequiredService<Forms.ShareTaskForm>())
+            {
+                ShareForm.Initialize(_users);
+
+                if (ShareForm.ShowDialog() == DialogResult.OK)
+                {
+                    var shareUserId = ShareForm.ShareUserId;
+
+                    var response = await _apiService.ShareTask(taskId, shareUserId);
+
+                    if (response is null) MessageBox.Show($"Error during sharing task");
+
+                    var item = new ListViewItem(response.Id.ToString());
+                    item.SubItems.Add(response.Name);
+                    item.SubItems.Add(response.Description);
+                    item.SubItems.Add(response.CreatedAt.ToString());
+
+                    lvSharedTaskByUser.Items.Add(item);
+                    _sharedTasksByUser.Add(response);
+
+                    MessageBox.Show("Selected task shared.", "Share");
+                }
+            }
+        }
+
+        private void btnWyloguj_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void btnChooseManager_Click(object sender, EventArgs e)
+        {
+            using (var ChooseManagerForm = _serviceProvider.GetRequiredService<Forms.ChooseManagerForm>())
+            {
+                ChooseManagerForm.Initialize(_users);
+
+                if (ChooseManagerForm.ShowDialog() == DialogResult.OK)
+                {
+                    var shareUserId = ChooseManagerForm.ChoosenManagerId;
+
+
+                    MessageBox.Show("Selected manager aproved.", "Choosen manager.");
+                }
+            }
         }
     }
 }

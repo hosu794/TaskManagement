@@ -34,6 +34,8 @@ namespace Frontend
             services.AddTransient<MainForm>();
             services.AddTransient<LoginRegisterForm>();
             services.AddTransient<EditForm>();
+            services.AddTransient<ShareTaskForm>();
+            services.AddTransient<ChooseManagerForm>();
             services.AddSingleton<AuthenticationDelegatingHandler>();
         }
 

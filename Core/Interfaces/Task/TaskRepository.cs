@@ -45,13 +45,19 @@ namespace Core.Interfaces.Task
         public async Task<bool> DeleteTask(int taskId, int userId)
         {
 
-            var taskToRemove = await _context.TaskTodos.FirstOrDefaultAsync(x => x.Id == taskId);
+            var taskToRemove = await _context.TaskTodos
+                .Include(t => t.Users)
+                .FirstOrDefaultAsync(x => x.Id == taskId);
 
             if (taskToRemove == null) return false;
+            
+            if (taskToRemove.UserId != userId) return true;
 
-            if (taskToRemove.UserId != userId) return false;
+            taskToRemove.Users.Clear();
 
             _context.Remove(taskToRemove);
+
+            await _context.SaveChangesAsync(true);
 
             return true;
         }
@@ -105,6 +111,33 @@ namespace Core.Interfaces.Task
                }).ToListAsync();
         }
 
+        public async Task<TaskResponse> ShareTask(int taskId, int userId)
+        {
+            var taskToShare = await _context.TaskTodos
+             .Include(x => x.Users)
+             .FirstOrDefaultAsync(x => x.Id == taskId);
+            if (taskToShare == null) throw new Exception("Task to share not found.");
+
+            var userToShareTask = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            if (userToShareTask == null) throw new Exception("User to share not found.");
+
+            if (!taskToShare.Users.Any(u => u.Id == userId))
+            {
+                taskToShare.Users.Add(userToShareTask);
+                await _context.SaveChangesAsync();
+            }
+
+            return new TaskResponse()
+            {
+                Id = taskToShare.Id,
+                CreatedAt = taskToShare.CreatedAt,
+                CreatedBy = taskToShare.UserId,
+                Name = taskToShare.Title,
+                Description = taskToShare.Description,
+                UpdatedAt = taskToShare.UpdatedAt
+            };
+        }
+
         public async Task<TaskResponse> UpdateTask(TaskRepositoryDto task, int taskId)
         {
             var taskToUpdate = await _context.TaskTodos.FirstOrDefaultAsync(x => x.Id == taskId);
@@ -135,7 +168,6 @@ namespace Core.Interfaces.Task
 
         }
 
-        
+
     }
 }
- 

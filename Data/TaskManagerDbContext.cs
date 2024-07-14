@@ -31,11 +31,11 @@ public partial class TaskManagerDbContext : DbContext
     {
         modelBuilder.Entity<Manager>(entity =>
         {
-            entity.HasKey(e => new { e.Id, e.UserId }).HasName("Manager_pk");
+            entity.HasKey(e => e.UserId).HasName("Manager_pk");
 
-            entity.Property(e => e.Id).ValueGeneratedOnAdd();
+            entity.Property(e => e.UserId).ValueGeneratedNever();
 
-            entity.HasOne(d => d.User).WithMany(p => p.Managers)
+            entity.HasOne(d => d.User).WithOne(p => p.Manager)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Manager_User");
         });
@@ -62,11 +62,13 @@ public partial class TaskManagerDbContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("User_pk");
 
+            entity.HasOne(d => d.ManagerNavigation).WithMany(p => p.Users).HasConstraintName("User_Manager");
+
             entity.HasMany(d => d.SharedTasks).WithMany(p => p.Users)
                 .UsingEntity<Dictionary<string, object>>(
                     "SharedTask",
                     r => r.HasOne<TaskTodo>().WithMany()
-                    .HasForeignKey("TaskId")
+                        .HasForeignKey("TaskId")
                         .OnDelete(DeleteBehavior.ClientSetNull)
                         .HasConstraintName("SharedTask_Task"),
                     l => l.HasOne<User>().WithMany()
