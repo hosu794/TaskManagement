@@ -1,9 +1,20 @@
 
 DROP TABLE IF EXISTS SharedTask;
 DROP TABLE IF EXISTS [TaskTodo];
-DROP TABLE IF EXISTS [Manager];
+
+
+IF EXISTS (SELECT 1 FROM sys.foreign_keys WHERE name = 'User_Manager')
+BEGIN
+    ALTER TABLE [User] DROP CONSTRAINT User_Manager;
+END
+
 DROP TABLE IF EXISTS [User];
+DROP TABLE IF EXISTS [Manager];
+
 DROP TABLE IF EXISTS [Priority];
+
+GO; 
+
 DROP PROCEDURE IF EXISTS [GetTaskStatisticsByManager];
 
 CREATE TABLE [Priority] (
@@ -26,8 +37,6 @@ CREATE TABLE [Manager] (
     CONSTRAINT Manager_User FOREIGN KEY (userId) REFERENCES [User] (id)
 );
 
-ALTER TABLE [User]
-ADD CONSTRAINT User_Manager FOREIGN KEY (managerId) REFERENCES [Manager] (userId);
 
 CREATE TABLE [TaskTodo] (
     id int NOT NULL IDENTITY(1,1),
