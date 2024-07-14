@@ -1,6 +1,5 @@
 ﻿using Core.Extensions;
 using Core.Implementations.Task;
-using Core.Models.Stats;
 using Core.Models.Task;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -97,18 +96,30 @@ namespace API.Controllers
             return Ok(await _taskService.GetSharedTaskForUserId(parsedIntUserId));
         }
 
-        [HttpGet("tasks/attached")]
+        [HttpGet("tasks/managers")]
         [Authorize]
         [ManagerOnly]
-        public async Task<IActionResult> GetAttachedUsetTasks()
+        public async Task<IActionResult> GetUserManagerTasks()
         {
-            throw new NotImplementedException();
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            int.TryParse(userId, out int parsedIntUserId);
+
+            var results = await _taskService.GetUserManagerTasks(parsedIntUserId);
+
+            return Ok(results);
         }
 
         [HttpGet("tasks/manager/stats")]
         [Authorize]
         [ManagerOnly]
-        public async Task<IActionResult> GetStats([FromBody] StatsRequest request) { throw new NotImplementedException(); }
+        public async Task<IActionResult> GetManagerUsersTaskStats() {
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            int.TryParse(userId, out int parsedIntUserId);
+
+            var results = await _taskService.GetTaskStatisticsByUserId(parsedIntUserId);
+
+            return Ok(results);
+        }
 
     }
 }

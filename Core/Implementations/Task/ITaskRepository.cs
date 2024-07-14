@@ -1,4 +1,5 @@
 ﻿using Core.Models.Task;
+using TaskManagement.Core.Models.Manager;
 
 namespace Core.Implementations.Task
 {
@@ -11,5 +12,7 @@ namespace Core.Implementations.Task
         Task<List<TaskResponse>> GetTaskSharedForUser(int userId);
         Task<List<TaskResponse>> GetTaskSharedByUser(int userId);
         Task<TaskResponse> ShareTask(int taskId, int userId);
+        Task<List<UserManagerTaskResponse>> GetAllUserTasksForManagerByUserId(int managerId);
+        Task<List<TaskStatistics>> GetAllStatisticsByUserId(int managerId);
     }
 }

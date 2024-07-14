@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using TaskManagement.Core.Models.Manager;
 using TaskManagement.Data.DbModels;
 
 namespace TaskManagement.Data;
@@ -24,8 +26,18 @@ public partial class TaskManagerDbContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
+    public virtual DbSet<TaskStatistics> TaskStatistics { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer();
+
+    public async Task<List<TaskStatistics>> GetTaskStatisticsByManagerAsync(int managerId)
+    {
+        return await TaskStatistics
+            .FromSqlRaw("EXEC GetTaskStatisticsByManager @ManagerId",
+                new SqlParameter("@ManagerId", managerId))
+            .ToListAsync();
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

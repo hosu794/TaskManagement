@@ -139,7 +139,8 @@ namespace Frontend
             MaximumSize = new Size(330, 340);
             MinimumSize = new Size(330, 340);
             Name = "LoginRegisterForm";
-            Text = "RegisterForm";
+            ShowIcon = false;
+            Text = "Register or login";
             splitContainer1.Panel1.ResumeLayout(false);
             splitContainer1.Panel1.PerformLayout();
             splitContainer1.Panel2.ResumeLayout(false);

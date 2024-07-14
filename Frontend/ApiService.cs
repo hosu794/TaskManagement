@@ -6,6 +6,7 @@ using Microsoft.Identity.Client.NativeInterop;
 using Newtonsoft.Json;
 using System.Net.Http.Json;
 using System.Runtime.CompilerServices;
+using TaskManagement.Core.Models.Manager;
 using TaskManagement.Core.Models.ShareTask;
 using TaskManagement.Core.Models.User;
 using TaskManagement.Data.DbModels;
@@ -201,6 +202,52 @@ namespace Frontend
             }
 
             return new List<TaskResponse>();
+        }
+
+        public async Task<bool> AssignUserToManager(int managerId)
+        {
+            var response = await _httpClient.PutAsync($"api/User/managers?managerId={managerId}", null);
+
+            return response.IsSuccessStatusCode;
+        }
+
+        public async Task<List<UserResponse>> GetAllManagers()
+        {
+            var response = await _httpClient.GetAsync("api/User/managers");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<List<UserResponse>>(content);
+            }
+
+            return new List<UserResponse>();
+        }
+
+        public async Task<List<UserManagerTaskResponse>> GetUserManagerTasks()
+        {
+            var response = await _httpClient.GetAsync("api/Task/tasks/managers");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<List<UserManagerTaskResponse>>(content);
+            }
+
+            return new List<UserManagerTaskResponse>();
+        }
+
+        public async Task<List<TaskStatistics>> GetManagerTaskStats()
+        {
+            var response = await _httpClient.GetAsync("api/Task/tasks/manager/stats");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<List<TaskStatistics>>(content);
+            }
+
+            return new List<TaskStatistics>();
         }
     }
 }

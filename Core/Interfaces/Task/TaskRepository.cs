@@ -2,6 +2,8 @@
 using Core.Models.Task;
 
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
+using TaskManagement.Core.Models.Manager;
 using TaskManagement.Data;
 using TaskManagement.Data.DbModels;
 
@@ -31,6 +33,10 @@ namespace Core.Interfaces.Task
             await _context.AddRangeAsync(newTask);
             await _context.SaveChangesAsync();
 
+            var priority = await _context.Priorities.FirstOrDefaultAsync(x => x.Id == newTask.PriorityId);
+
+            if (priority == null) throw new Exception("Priority not found");
+
             return new TaskResponse()
             {
                 Id = newTask.Id,
@@ -38,7 +44,9 @@ namespace Core.Interfaces.Task
                 CreatedBy = newTask.UserId,
                 Name = newTask.Title,
                 Description = newTask.Description,
-                UpdatedAt = newTask.UpdatedAt
+                UpdatedAt = newTask.UpdatedAt,
+                PriorityId = newTask.PriorityId,
+                PriorityName = priority.Name
             };
         }
 
@@ -62,9 +70,38 @@ namespace Core.Interfaces.Task
             return true;
         }
 
+        public async Task<List<TaskStatistics>> GetAllStatisticsByUserId(int managerId)
+        {
+            var manager = await _context.Managers.AsNoTracking().FirstOrDefaultAsync(x => x.UserId == managerId);
+
+            if (manager == null) throw new Exception("Manager with user id doesnt exists!");
+            
+            return await _context.GetTaskStatisticsByManagerAsync(manager.UserId);
+        }
+
+        public async Task<List<UserManagerTaskResponse>> GetAllUserTasksForManagerByUserId(int userId)
+        {
+            return await _context.Managers.AsNoTracking()
+            .Where(x => x.UserId == userId)
+            .SelectMany(x => x.Users)
+            .SelectMany(u => u.TaskTodos.Select(t => new UserManagerTaskResponse
+            {
+                Id = t.Id,
+                CreatedAt = t.CreatedAt,
+                Description = t.Description,
+                Name = t.Title,
+                PriorityId = t.PriorityId,
+                PriorityName = t.Priority.Name,
+                UserId = u.Id,
+                Username = u.Username
+            }))
+            .ToListAsync();
+        }
+
         public Task<List<TaskResponse>> GetTaskByUserId(int userId)
         {
             return _context.TaskTodos.AsNoTracking()
+                .Include(x => x.Priority)
                 .Where(x => x.UserId == userId)
                 .Select(x => new TaskResponse()
                 {
@@ -75,12 +112,14 @@ namespace Core.Interfaces.Task
                     Name = x.Title,
                     UpdatedAt = x.UpdatedAt,
                     PriorityId = x.PriorityId,
+                    PriorityName = x.Priority.Name
                 }).ToListAsync();
         }
 
         public async Task<List<TaskResponse>> GetTaskSharedByUser(int userId)
         {
             return await _context.TaskTodos.AsNoTracking()
+                .Include(x => x.Priority)
                 .Include(x => x.Users)
                 .Where(x => x.Users.Count > 0 && x.UserId == userId)
                 .Select(x => new TaskResponse()
@@ -90,7 +129,8 @@ namespace Core.Interfaces.Task
                     CreatedBy = x.UserId,
                     Name = x.Title,
                     Description = x.Description,
-                    UpdatedAt = x.UpdatedAt
+                    UpdatedAt = x.UpdatedAt,
+                    PriorityName = x.Priority.Name
                 }).ToListAsync();
         }
 
@@ -98,6 +138,7 @@ namespace Core.Interfaces.Task
         {
             return await _context.Users.AsNoTracking()
                .Include(x => x.SharedTasks)
+               .ThenInclude(x => x.Priority)
                .Where(x => x.SharedTasks.Count > 0 && x.Id == userId)
                .SelectMany(x => x.SharedTasks)
                .Select(x => new TaskResponse()
@@ -107,7 +148,9 @@ namespace Core.Interfaces.Task
                    CreatedBy = x.UserId,
                    Name = x.Title,
                    Description = x.Description,
-                   UpdatedAt = x.UpdatedAt
+                   UpdatedAt = x.UpdatedAt,
+                   PriorityId = x.Priority.Id,
+                   PriorityName = x.Priority.Name
                }).ToListAsync();
         }
 
@@ -115,6 +158,7 @@ namespace Core.Interfaces.Task
         {
             var taskToShare = await _context.TaskTodos
              .Include(x => x.Users)
+             .Include(x => x.Priority)
              .FirstOrDefaultAsync(x => x.Id == taskId);
             if (taskToShare == null) throw new Exception("Task to share not found.");
 
@@ -134,7 +178,9 @@ namespace Core.Interfaces.Task
                 CreatedBy = taskToShare.UserId,
                 Name = taskToShare.Title,
                 Description = taskToShare.Description,
-                UpdatedAt = taskToShare.UpdatedAt
+                UpdatedAt = taskToShare.UpdatedAt,
+                PriorityId= taskToShare.Priority.Id,
+                PriorityName = taskToShare.Priority.Name
             };
         }
 
@@ -154,6 +200,10 @@ namespace Core.Interfaces.Task
             _context.Entry(taskToUpdate).Property(p => p.UpdatedAt).IsModified = true;
             _context.Entry(taskToUpdate).Property(p => p.Title).IsModified = true;
 
+            var priority = await _context.Priorities.FirstOrDefaultAsync(x => x.Id == taskToUpdate.PriorityId);
+
+            if (priority == null) throw new Exception("Priority not found");
+
             await _context.SaveChangesAsync();
 
             return new TaskResponse()
@@ -163,7 +213,9 @@ namespace Core.Interfaces.Task
                 CreatedBy = taskToUpdate.UserId,
                 Name = taskToUpdate.Title,
                 Description = taskToUpdate.Description,
-                UpdatedAt = taskToUpdate.UpdatedAt
+                UpdatedAt = taskToUpdate.UpdatedAt,
+                PriorityId = taskToUpdate.PriorityId,
+                PriorityName = priority.Name
             };
 
         }
@@ -171,3 +223,4 @@ namespace Core.Interfaces.Task
 
     }
 }
+ 

@@ -1,6 +1,7 @@
 ﻿using Core.Implementations.Task;
 using Core.Interfaces.Priority;
 using Core.Models.Task;
+using TaskManagement.Core.Models.Manager;
 
 namespace Core.Interfaces.Task
 {
@@ -40,6 +41,16 @@ namespace Core.Interfaces.Task
         public async Task<List<TaskResponse>> GetTaskByUserId(int userId)
         {
             return await _taskRepository.GetTaskByUserId(userId);
+        }
+
+        public async Task<List<TaskStatistics>> GetTaskStatisticsByUserId(int userId)
+        {
+            return await _taskRepository.GetAllStatisticsByUserId(userId);
+        }
+
+        public async Task<List<UserManagerTaskResponse>> GetUserManagerTasks(int managerId)
+        {
+            return await _taskRepository.GetAllUserTasksForManagerByUserId(managerId);
         }
 
         public async Task<TaskResponse> ShareTask(int taskId, int userId)

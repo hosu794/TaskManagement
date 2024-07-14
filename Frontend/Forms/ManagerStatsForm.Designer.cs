@@ -1,6 +1,6 @@
-﻿namespace Frontend.Forms
+﻿namespace TaskManagement.Frontend.Forms
 {
-    partial class ChooseManagerForm
+    partial class ManagerStatsForm
     {
         /// <summary>
         /// Required designer variable.
@@ -29,10 +29,13 @@
         private void InitializeComponent()
         {
             splitContainer1 = new SplitContainer();
-            lbChooseManager = new Label();
-            cbChooseManager = new ComboBox();
+            lvStats = new ListView();
+            cUserId = new ColumnHeader();
+            cUsername = new ColumnHeader();
+            cYear = new ColumnHeader();
+            cMonth = new ColumnHeader();
+            cTaskCount = new ColumnHeader();
             btnClose = new Button();
-            btnSave = new Button();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
@@ -48,68 +51,74 @@
             // 
             // splitContainer1.Panel1
             // 
-            splitContainer1.Panel1.Controls.Add(lbChooseManager);
-            splitContainer1.Panel1.Controls.Add(cbChooseManager);
+            splitContainer1.Panel1.Controls.Add(lvStats);
             // 
             // splitContainer1.Panel2
             // 
             splitContainer1.Panel2.Controls.Add(btnClose);
-            splitContainer1.Panel2.Controls.Add(btnSave);
-            splitContainer1.Size = new Size(241, 313);
-            splitContainer1.SplitterDistance = 245;
+            splitContainer1.Size = new Size(920, 515);
+            splitContainer1.SplitterDistance = 444;
             splitContainer1.TabIndex = 0;
             // 
-            // lbChooseManager
+            // lvStats
             // 
-            lbChooseManager.AutoSize = true;
-            lbChooseManager.Location = new Point(12, 20);
-            lbChooseManager.Name = "lbChooseManager";
-            lbChooseManager.Size = new Size(97, 15);
-            lbChooseManager.TabIndex = 1;
-            lbChooseManager.Text = "Choose manager";
+            lvStats.Columns.AddRange(new ColumnHeader[] { cUserId, cUsername, cYear, cMonth, cTaskCount });
+            lvStats.Dock = DockStyle.Fill;
+            lvStats.Location = new Point(0, 0);
+            lvStats.Name = "lvStats";
+            lvStats.Size = new Size(920, 444);
+            lvStats.TabIndex = 0;
+            lvStats.UseCompatibleStateImageBehavior = false;
+            lvStats.View = View.Details;
             // 
-            // cbChooseManager
+            // cUserId
             // 
-            cbChooseManager.FormattingEnabled = true;
-            cbChooseManager.Location = new Point(12, 38);
-            cbChooseManager.Name = "cbChooseManager";
-            cbChooseManager.Size = new Size(203, 23);
-            cbChooseManager.TabIndex = 0;
+            cUserId.Text = "User id";
+            cUserId.Width = 100;
+            // 
+            // cUsername
+            // 
+            cUsername.Text = "Username";
+            cUsername.Width = 200;
+            // 
+            // cYear
+            // 
+            cYear.Text = "Year";
+            cYear.Width = 200;
+            // 
+            // cMonth
+            // 
+            cMonth.Text = "Month";
+            cMonth.Width = 200;
+            // 
+            // cTaskCount
+            // 
+            cTaskCount.Text = "Count";
+            cTaskCount.Width = 200;
             // 
             // btnClose
             // 
-            btnClose.Location = new Point(154, 27);
+            btnClose.Location = new Point(807, 18);
             btnClose.Name = "btnClose";
-            btnClose.Size = new Size(75, 23);
-            btnClose.TabIndex = 1;
+            btnClose.Size = new Size(92, 27);
+            btnClose.TabIndex = 0;
             btnClose.Text = "Close";
             btnClose.UseVisualStyleBackColor = true;
             btnClose.Click += btnClose_Click;
             // 
-            // btnSave
-            // 
-            btnSave.Location = new Point(12, 27);
-            btnSave.Name = "btnSave";
-            btnSave.Size = new Size(75, 23);
-            btnSave.TabIndex = 0;
-            btnSave.Text = "Save";
-            btnSave.UseVisualStyleBackColor = true;
-            btnSave.Click += btnSave_Click;
-            // 
-            // ChooseManagerForm
+            // ManagerStatsForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(241, 313);
+            ClientSize = new Size(920, 515);
             Controls.Add(splitContainer1);
-            MaximumSize = new Size(257, 352);
-            MinimumSize = new Size(257, 352);
-            Name = "ChooseManagerForm";
+            MaximumSize = new Size(936, 554);
+            MinimumSize = new Size(936, 554);
+            Name = "ManagerStatsForm";
             ShowIcon = false;
             StartPosition = FormStartPosition.CenterParent;
-            Text = "Choose manager";
+            Text = "ManagerStatsForm";
             splitContainer1.Panel1.ResumeLayout(false);
-            splitContainer1.Panel1.PerformLayout();
             splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
             splitContainer1.ResumeLayout(false);
@@ -119,9 +128,12 @@
         #endregion
 
         private SplitContainer splitContainer1;
-        private ComboBox cbChooseManager;
-        private Label lbChooseManager;
         private Button btnClose;
-        private Button btnSave;
+        private ListView lvStats;
+        private ColumnHeader cUserId;
+        private ColumnHeader cUsername;
+        private ColumnHeader cYear;
+        private ColumnHeader cMonth;
+        private ColumnHeader cTaskCount;
     }
 }

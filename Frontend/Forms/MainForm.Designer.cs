@@ -48,28 +48,37 @@ namespace Frontend
             Id = new ColumnHeader();
             ColName = new ColumnHeader();
             Description = new ColumnHeader();
+            PriorityName = new ColumnHeader();
             CreatedAt = new ColumnHeader();
             tabPage2 = new TabPage();
             splitContainer3 = new SplitContainer();
             splitContainer4 = new SplitContainer();
             label1 = new Label();
             lvSharedTaskByUser = new ListView();
+            clId = new ColumnHeader();
+            clName = new ColumnHeader();
+            clDescription = new ColumnHeader();
+            clPriorityName = new ColumnHeader();
+            clCreatedAt = new ColumnHeader();
             btnShareEdit = new Button();
             splitContainer5 = new SplitContainer();
             label2 = new Label();
             lvSharedTaskForUser = new ListView();
-            tabPage3 = new TabPage();
-            splitContainer6 = new SplitContainer();
-            listView3 = new ListView();
-            button3 = new Button();
-            clId = new ColumnHeader();
-            clName = new ColumnHeader();
-            clDescription = new ColumnHeader();
-            clCreatedAt = new ColumnHeader();
             colId = new ColumnHeader();
             chName = new ColumnHeader();
             chDescription = new ColumnHeader();
+            chPriority = new ColumnHeader();
             chCreatedAt = new ColumnHeader();
+            tabPage3 = new TabPage();
+            splitContainer6 = new SplitContainer();
+            lvUserManagerTasks = new ListView();
+            cId = new ColumnHeader();
+            cName = new ColumnHeader();
+            cDescription = new ColumnHeader();
+            cCreatedAt = new ColumnHeader();
+            cPriority = new ColumnHeader();
+            cUsername = new ColumnHeader();
+            button3 = new Button();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
@@ -260,7 +269,7 @@ namespace Frontend
             // lvTasks
             // 
             lvTasks.CheckBoxes = true;
-            lvTasks.Columns.AddRange(new ColumnHeader[] { Id, ColName, Description, CreatedAt });
+            lvTasks.Columns.AddRange(new ColumnHeader[] { Id, ColName, Description, PriorityName, CreatedAt });
             lvTasks.Dock = DockStyle.Fill;
             lvTasks.Location = new Point(0, 0);
             lvTasks.Name = "lvTasks";
@@ -283,8 +292,14 @@ namespace Frontend
             Description.Text = "Description";
             Description.Width = 400;
             // 
+            // PriorityName
+            // 
+            PriorityName.DisplayIndex = 4;
+            PriorityName.Text = "Priority";
+            // 
             // CreatedAt
             // 
+            CreatedAt.DisplayIndex = 3;
             CreatedAt.Text = "CreatedAt";
             CreatedAt.Width = 120;
             // 
@@ -346,7 +361,8 @@ namespace Frontend
             // 
             // lvSharedTaskByUser
             // 
-            lvSharedTaskByUser.Columns.AddRange(new ColumnHeader[] { clId, clName, clDescription, clCreatedAt });
+            lvSharedTaskByUser.CheckBoxes = true;
+            lvSharedTaskByUser.Columns.AddRange(new ColumnHeader[] { clId, clName, clDescription, clPriorityName, clCreatedAt });
             lvSharedTaskByUser.Location = new Point(0, 44);
             lvSharedTaskByUser.Name = "lvSharedTaskByUser";
             lvSharedTaskByUser.Size = new Size(533, 379);
@@ -354,14 +370,37 @@ namespace Frontend
             lvSharedTaskByUser.UseCompatibleStateImageBehavior = false;
             lvSharedTaskByUser.View = View.Details;
             // 
+            // clId
+            // 
+            clId.Text = "Id";
+            // 
+            // clName
+            // 
+            clName.Text = "Name";
+            // 
+            // clDescription
+            // 
+            clDescription.Text = "Description";
+            // 
+            // clPriorityName
+            // 
+            clPriorityName.DisplayIndex = 4;
+            clPriorityName.Text = "Priority";
+            // 
+            // clCreatedAt
+            // 
+            clCreatedAt.DisplayIndex = 3;
+            clCreatedAt.Text = "CreatedAt";
+            // 
             // btnShareEdit
             // 
             btnShareEdit.Location = new Point(20, 26);
             btnShareEdit.Name = "btnShareEdit";
             btnShareEdit.Size = new Size(109, 34);
             btnShareEdit.TabIndex = 0;
-            btnShareEdit.Text = "Edit Share";
+            btnShareEdit.Text = "Unshare";
             btnShareEdit.UseVisualStyleBackColor = true;
+            btnShareEdit.Click += btnUnshare_Click;
             // 
             // splitContainer5
             // 
@@ -389,13 +428,31 @@ namespace Frontend
             // 
             // lvSharedTaskForUser
             // 
-            lvSharedTaskForUser.Columns.AddRange(new ColumnHeader[] { colId, chName, chDescription, chCreatedAt });
+            lvSharedTaskForUser.Columns.AddRange(new ColumnHeader[] { colId, chName, chDescription, chPriority, chCreatedAt });
             lvSharedTaskForUser.Location = new Point(3, 44);
             lvSharedTaskForUser.Name = "lvSharedTaskForUser";
             lvSharedTaskForUser.Size = new Size(591, 379);
             lvSharedTaskForUser.TabIndex = 0;
             lvSharedTaskForUser.UseCompatibleStateImageBehavior = false;
             lvSharedTaskForUser.View = View.Details;
+            // 
+            // colId
+            // 
+            colId.Text = "Id";
+            // 
+            // chDescription
+            // 
+            chDescription.Text = "Description";
+            // 
+            // chPriority
+            // 
+            chPriority.DisplayIndex = 4;
+            chPriority.Text = "Priority";
+            // 
+            // chCreatedAt
+            // 
+            chCreatedAt.DisplayIndex = 3;
+            chCreatedAt.Text = "CreatedAt";
             // 
             // tabPage3
             // 
@@ -417,7 +474,7 @@ namespace Frontend
             // 
             // splitContainer6.Panel1
             // 
-            splitContainer6.Panel1.Controls.Add(listView3);
+            splitContainer6.Panel1.Controls.Add(lvUserManagerTasks);
             // 
             // splitContainer6.Panel2
             // 
@@ -426,14 +483,36 @@ namespace Frontend
             splitContainer6.SplitterDistance = 446;
             splitContainer6.TabIndex = 0;
             // 
-            // listView3
+            // lvUserManagerTasks
             // 
-            listView3.Dock = DockStyle.Fill;
-            listView3.Location = new Point(0, 0);
-            listView3.Name = "listView3";
-            listView3.Size = new Size(1134, 446);
-            listView3.TabIndex = 0;
-            listView3.UseCompatibleStateImageBehavior = false;
+            lvUserManagerTasks.Columns.AddRange(new ColumnHeader[] { cId, cName, cDescription, cCreatedAt, cPriority, cUsername });
+            lvUserManagerTasks.Dock = DockStyle.Fill;
+            lvUserManagerTasks.Location = new Point(0, 0);
+            lvUserManagerTasks.Name = "lvUserManagerTasks";
+            lvUserManagerTasks.Size = new Size(1134, 446);
+            lvUserManagerTasks.TabIndex = 0;
+            lvUserManagerTasks.UseCompatibleStateImageBehavior = false;
+            lvUserManagerTasks.View = View.Details;
+            // 
+            // cId
+            // 
+            cId.Text = "Task id";
+            // 
+            // cDescription
+            // 
+            cDescription.Text = "Description";
+            // 
+            // cCreatedAt
+            // 
+            cCreatedAt.Text = "Created at";
+            // 
+            // cPriority
+            // 
+            cPriority.Text = "Priority";
+            // 
+            // cUsername
+            // 
+            cUsername.Text = "Username";
             // 
             // button3
             // 
@@ -443,26 +522,7 @@ namespace Frontend
             button3.TabIndex = 0;
             button3.Text = "Genererate report";
             button3.UseVisualStyleBackColor = true;
-            // 
-            // clId
-            // 
-            clId.Text = "Id";
-            // 
-            // clName
-            // 
-            clName.Text = "Name";
-            // 
-            // colId
-            // 
-            colId.Text = "Id";
-            // 
-            // chDescription
-            // 
-            chDescription.Text = "Description";
-            // 
-            // chCreatedAt
-            // 
-            chCreatedAt.Text = "chCreatedAt";
+            button3.Click += btnGenerateReport_Click;
             // 
             // MainForm
             // 
@@ -540,7 +600,7 @@ namespace Frontend
         private ListView lvSharedTaskForUser;
         private Button btnShareEdit;
         private SplitContainer splitContainer6;
-        private ListView listView3;
+        private ListView lvUserManagerTasks;
         private Button button3;
         private ColumnHeader clId;
         private ColumnHeader clName;
@@ -550,5 +610,14 @@ namespace Frontend
         private ColumnHeader chName;
         private ColumnHeader chDescription;
         private ColumnHeader chCreatedAt;
+        private ColumnHeader PriorityName;
+        private ColumnHeader clPriorityName;
+        private ColumnHeader chPriority;
+        private ColumnHeader cId;
+        private ColumnHeader cName;
+        private ColumnHeader cDescription;
+        private ColumnHeader cPriority;
+        private ColumnHeader cUsername;
+        private ColumnHeader cCreatedAt;
     }
 }

@@ -1,6 +1,7 @@
 using Frontend.Forms;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net.Http;
+using TaskManagement.Frontend.Forms;
 
 namespace Frontend
 {
@@ -36,6 +37,7 @@ namespace Frontend
             services.AddTransient<EditForm>();
             services.AddTransient<ShareTaskForm>();
             services.AddTransient<ChooseManagerForm>();
+            services.AddTransient<ManagerStatsForm>();
             services.AddSingleton<AuthenticationDelegatingHandler>();
         }
 

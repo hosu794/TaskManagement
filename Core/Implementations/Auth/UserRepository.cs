@@ -119,5 +119,40 @@ namespace Core.Services.Auth
                     IsManager = u.Manager != null ? true : false,
                 }).ToListAsync();
         }
+
+        public async Task<bool> AssignManagerToUser(int userId, int managerId)
+        {
+
+            var user = await _context.Users
+                .FirstOrDefaultAsync(x => x.Id == userId);
+
+            if (user == null) return false;
+
+            var userManager = await _context.Users
+                .Include(x => x.Manager)
+                .FirstOrDefaultAsync(x => x.Id == managerId);
+
+            if (userManager == null && userManager?.Manager != null) return false;
+
+            user.ManagerId = managerId;
+
+            _context.Entry(user).Property(p => p.ManagerId).IsModified = true;
+
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<List<UserResponse>> GetAllManagers()
+        {
+            return await _context.Managers.AsNoTracking()
+                .Include(x => x.User)
+                .Select(x => new UserResponse()
+                {
+                    Id = x.User.Id,
+                    IsManager = true,
+                    Username = x.User.Username
+                }).ToListAsync();
+        }
     }
 }

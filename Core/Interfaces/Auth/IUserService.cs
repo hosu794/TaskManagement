@@ -10,5 +10,7 @@ namespace Core.Interfaces.Auth
         Task<UserResponse> GetUser(int userId);
         Task<bool> IsExistsByUsername(string username);
         Task<List<UserResponse>> GetAllUsers();
+        Task<bool> AssignUserToManager(int userId, int managerId);
+        Task<List<UserResponse>> GetAllManagers();
     }
 }

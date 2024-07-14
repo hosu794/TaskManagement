@@ -1,15 +1,18 @@
 ﻿using Core.Models.Task;
+using TaskManagement.Core.Models.Manager;
 
 namespace Core.Implementations.Task
 {
     public interface ITaskService
     {
-        public Task<TaskResponse> CreateTask(TaskRequest request, int userId);
-        public Task<List<TaskResponse>> GetTaskByUserId(int userId);
-        public Task<bool> DeleteTaskById(int taskId, int userId);
-        public Task<TaskResponse> UpdateTask(TaskRequest request, int taskId);
-        public Task<List<TaskResponse>> GetSharedTaskByUserId(int userId);
-        public Task<List<TaskResponse>> GetSharedTaskForUserId(int userId);
-        public Task<TaskResponse> ShareTask(int taskId, int userId);    
+        Task<TaskResponse> CreateTask(TaskRequest request, int userId);
+        Task<List<TaskResponse>> GetTaskByUserId(int userId);
+        Task<bool> DeleteTaskById(int taskId, int userId);
+        Task<TaskResponse> UpdateTask(TaskRequest request, int taskId);
+        Task<List<TaskResponse>> GetSharedTaskByUserId(int userId);
+        Task<List<TaskResponse>> GetSharedTaskForUserId(int userId);
+        Task<TaskResponse> ShareTask(int taskId, int userId);
+        Task<List<UserManagerTaskResponse>> GetUserManagerTasks(int managerId);
+        Task<List<TaskStatistics>> GetTaskStatisticsByUserId(int userId);
     }
 }

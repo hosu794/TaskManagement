@@ -74,5 +74,15 @@ namespace Core.Implementations.Auth
         {
             return await _userRepository.GetAllUsers();
         }
+
+        public async Task<bool> AssignUserToManager(int userId, int managerId)
+        {
+            return await _userRepository.AssignManagerToUser(userId, managerId);
+        }
+
+        public async Task<List<UserResponse>> GetAllManagers()
+        {
+            return await _userRepository.GetAllManagers();
+        }
     }
 }

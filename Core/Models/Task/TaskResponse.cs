@@ -9,5 +9,6 @@
         public DateTime? UpdatedAt { get; set; }
         public int CreatedBy { get; set; }
         public int PriorityId { get; set; } 
+        public string PriorityName { get; set; }
     }
 }

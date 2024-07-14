@@ -4,6 +4,7 @@ using Core.Models.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using TaskManagement.Core.Models.User;
 
 namespace API.Controllers
 {
@@ -68,6 +69,27 @@ namespace API.Controllers
         public async Task<IActionResult> GetAllUsers()
         {
             return Ok(await _userService.GetAllUsers());
+        }
+
+        [HttpPut("managers")]
+        public async Task<IActionResult> AssignManagerToUser([FromQuery] int managerId)
+        {
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+
+            int.TryParse(userId, out int parsedIntUserId);
+
+            var result = await _userService.AssignUserToManager(parsedIntUserId, managerId);
+
+            if (!result) return BadRequest("Wrong managerId or userId");
+
+            return Ok();
+        }
+
+        [HttpGet("managers")]
+        [Authorize]
+        public async Task<IActionResult> GetAllManagers()
+        {
+            return Ok(await _userService.GetAllManagers());
         }
     }
 }
