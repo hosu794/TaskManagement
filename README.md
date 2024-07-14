@@ -240,3 +240,7 @@ In addition to the points mentioned earlier:
 - **WinForms**: Selected for a simple and quick user interface implementation.
 - **REST API**: Provides a clean separation between the UI and business logic, enabling potential future expansion to other types of clients (e.g., web, mobile).
 - **Role-based Authorization**: Implemented to ensure proper access control for users and managers, enhancing system security and functionality segregation.
+
+
+## Framework Version
+This project was built using .NET Core 8, providing a modern, efficient, and cross-platform framework for developing the application.
